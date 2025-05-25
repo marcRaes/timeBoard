@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\WorkDayRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -26,6 +28,17 @@ class WorkDay
 
     #[ORM\Column]
     private ?bool $hasLunchTicket = null;
+
+    /**
+     * @var Collection<int, WorkPeriod>
+     */
+    #[ORM\OneToMany(targetEntity: WorkPeriod::class, mappedBy: 'workDay')]
+    private Collection $workPeriods;
+
+    public function __construct()
+    {
+        $this->workPeriods = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -76,6 +89,36 @@ class WorkDay
     public function setHasLunchTicket(bool $hasLunchTicket): static
     {
         $this->hasLunchTicket = $hasLunchTicket;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WorkPeriod>
+     */
+    public function getWorkPeriods(): Collection
+    {
+        return $this->workPeriods;
+    }
+
+    public function addWorkPeriod(WorkPeriod $workPeriod): static
+    {
+        if (!$this->workPeriods->contains($workPeriod)) {
+            $this->workPeriods->add($workPeriod);
+            $workPeriod->setWorkDay($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkPeriod(WorkPeriod $workPeriod): static
+    {
+        if ($this->workPeriods->removeElement($workPeriod)) {
+            // set the owning side to null (unless already changed)
+            if ($workPeriod->getWorkDay() === $this) {
+                $workPeriod->setWorkDay(null);
+            }
+        }
 
         return $this;
     }
