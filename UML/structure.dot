@@ -1,0 +1,45 @@
+// UML - TimeBoard
+digraph {
+	fontsize=12 rankdir=LR
+	User [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+<TR><TD COLSPAN="2"><B>User</B></TD></TR>
+<TR><TD>+ id : int</TD></TR>
+<TR><TD>+ email : string</TD></TR>
+<TR><TD>+ roles : array</TD></TR>
+<TR><TD>+ password : string</TD></TR>
+<TR><TD>+ firstName : string</TD></TR>
+<TR><TD>+ lastName : string</TD></TR>
+<TR><TD>+ createdAt : DateTimeImmutable</TD></TR>
+<TR><TD>+ isActive : bool</TD></TR>
+</TABLE>> shape=record]
+	WorkMonth [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+<TR><TD COLSPAN="2"><B>WorkMonth</B></TD></TR>
+<TR><TD>+ id : int</TD></TR>
+<TR><TD>+ user : User</TD></TR>
+<TR><TD>+ month : int</TD></TR>
+<TR><TD>+ year : int</TD></TR>
+<TR><TD>+ createdAt : DateTimeImmutable</TD></TR>
+</TABLE>>]
+	WorkDay [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+<TR><TD COLSPAN="2"><B>WorkDay</B></TD></TR>
+<TR><TD>+ id : int</TD></TR>
+<TR><TD>+ workMonth : WorkMonth</TD></TR>
+<TR><TD>+ date : DateTimeImmutable</TD></TR>
+<TR><TD>+ isFullDay : bool</TD></TR>
+<TR><TD>+ hasLunchTicket : bool</TD></TR>
+</TABLE>>]
+	WorkPeriod [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
+<TR><TD COLSPAN="2"><B>WorkPeriod</B></TD></TR>
+<TR><TD>+ id : int</TD></TR>
+<TR><TD>+ workDay : WorkDay</TD></TR>
+<TR><TD>+ label : string</TD></TR>
+<TR><TD>+ start : TimeImmutable</TD></TR>
+<TR><TD>+ end : TimeImmutable</TD></TR>
+<TR><TD>+ duration : int</TD></TR>
+<TR><TD>+ location : string</TD></TR>
+<TR><TD>+ replacedAgent : string|null</TD></TR>
+</TABLE>>]
+	User -> WorkMonth [label="1..*"]
+	WorkMonth -> WorkDay [label="1..*"]
+	WorkDay -> WorkPeriod [label="1..*"]
+}
