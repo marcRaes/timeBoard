@@ -1,3 +1,11 @@
-body {
-    background-color: skyblue;
+.password-toggle-btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    z-index: 3;
+    padding: 0;
+    color: #6c757d;
 }

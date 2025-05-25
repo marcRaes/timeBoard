@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <h1>Register</h1>
+
+    {{ form_errors(registrationForm) }}
+
+    {{ form_start(registrationForm) }}
+    {{ form_row(registrationForm.firstName) }}
+    {{ form_row(registrationForm.lastName) }}
+    {{ form_row(registrationForm.email) }}
+    <div data-controller="password-toggle" style="position:relative; display:inline-block;">
+        {{ form_label(registrationForm.plainPassword) }}
+        {{ form_widget(registrationForm.plainPassword, {
+            'attr': {
+                'data-password-toggle-target': 'input',
+                'id': 'password-field',
+                'class': 'pe-5'
+            }
+        }) }}
+        <button type="button"
+                data-password-toggle-target="toggleIcon"
+                data-action="click->password-toggle#toggle"
+                class="btn btn-sm password-toggle-btn"
+                style="border:none; background:transparent; padding:0 0.5rem; z-index:10;"
+                aria-label="Afficher ou masquer le mot de passe"
+                tabindex="-1">
+            <i class="bi bi-eye"></i>
+        </button>
+    </div>
+
+    <div>
+        <button type="submit" class="btn btn-success">Créer le compte</button>
+    </div>
+    {{ form_end(registrationForm) }}
+{% endblock %}
