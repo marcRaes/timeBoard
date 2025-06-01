@@ -7,8 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: WorkDayRepository::class)]
+#[UniqueEntity(fields: ['date', 'workMonth'], message: 'Journée de travail déjà existante à cette date.', errorPath: 'date')]
 class WorkDay
 {
     #[ORM\Id]
@@ -16,11 +18,11 @@ class WorkDay
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'workDays')]
+    #[ORM\ManyToOne(targetEntity: WorkMonth::class, inversedBy: 'workDays')]
     #[ORM\JoinColumn(nullable: false)]
     private ?WorkMonth $workMonth = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, unique: true)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column]

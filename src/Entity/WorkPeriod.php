@@ -18,9 +18,6 @@ class WorkPeriod
     #[ORM\JoinColumn(nullable: false)]
     private ?WorkDay $workDay = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $label = null;
-
     #[ORM\Column(type: Types::TIME_IMMUTABLE)]
     private ?\DateTimeImmutable $timeStart = null;
 
@@ -49,18 +46,6 @@ class WorkPeriod
     public function setWorkDay(?WorkDay $workDay): static
     {
         $this->workDay = $workDay;
-
-        return $this;
-    }
-
-    public function getLabel(): ?string
-    {
-        return $this->label;
-    }
-
-    public function setLabel(string $label): static
-    {
-        $this->label = $label;
 
         return $this;
     }

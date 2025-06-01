@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}TimeBoard - {{ is_editing ? 'Modifier' : 'Ajouter' }} une journée de travail{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <h1 class="mb-4">{{ is_editing ? 'Modifier la journée de travail' : 'Ajouter une journée de travail' }}</h1>
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('app_home') }}" class="btn-close" aria-label="Fermer"></a>
+        </div>
+
+        <div data-controller="work-period">
+            {{ form_start(workDayForm) }}
+
+            <div class="mb-3">
+                {{ form_row(workDayForm.date) }}
+            </div>
+
+            <div class="mb-3">
+                {{ form_row(workDayForm.isFullDay, {
+                    attr: {
+                        'data-work-period-target': 'isFullDay',
+                        'data-action': 'change->work-period#handleFullDayChange'
+                    }
+                }) }}
+            </div>
+
+            <hr>
+
+            <div data-work-period-target="container">
+                {% for workPeriodForm in workDayForm.workPeriods %}
+                    <div class="work-period-entry mb-4" data-work-period-target="workPeriodEntry">
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form_row(workPeriodForm.timeStart) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(workPeriodForm.timeEnd) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(workPeriodForm.durationDisplay, {
+                                    attr: {
+                                        'readonly': true,
+                                        'disabled': true
+                                    }
+                                }) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(workPeriodForm.duration) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(workPeriodForm.location) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(workPeriodForm.replacedAgent) }}
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn btn-danger mt-2 remove-period-button d-none" data-action="click->work-period#removePeriod">
+                            Supprimer
+                        </button>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <template data-work-period-target="workPeriodTemplate">
+                <div class="work-period-entry mb-4" data-work-period-target="workPeriodEntry">
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form_row(workDayForm.workPeriods.vars.prototype.timeStart) | replace({ '__name__': '__name__' })|raw }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(workDayForm.workPeriods.vars.prototype.timeEnd) | replace({ '__name__': '__name__' })|raw }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(workDayForm.workPeriods.vars.prototype.durationDisplay, {
+                                attr: {
+                                    'readonly': true,
+                                    'disabled': true
+                                }
+                            }) | replace({ '__name__': '__name__' })|raw }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(workDayForm.workPeriods.vars.prototype.duration) | replace({ '__name__': '__name__' })|raw }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(workDayForm.workPeriods.vars.prototype.location) | replace({ '__name__': '__name__' })|raw }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form_row(workDayForm.workPeriods.vars.prototype.replacedAgent) | replace({ '__name__': '__name__' })|raw }}
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-danger mt-2 remove-period-button d-none" data-action="click->work-period#removePeriod">
+                        Supprimer
+                    </button>
+                </div>
+            </template>
+
+            <div class="d-none" data-work-period-target="hasLunchTicket">
+                {{ form_row(workDayForm.hasLunchTicket) }}
+            </div>
+
+            <div class="alert alert-info mb-3 d-none" data-work-period-target="lunchTicketMessage">
+                <i class="bi bi-ticket-perforated"></i>
+                Un ticket restaurant vous est attribué pour cette journée
+            </div>
+
+            <div class="text-center my-4">
+                <button type="button" class="btn btn-outline-primary" data-work-period-target="addButton" data-action="click->work-period#addPeriod">Ajouter un créneau</button>
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-success">Enregistrer</button>
+            </div>
+
+            {{ form_end(workDayForm) }}
+        </div>
+    </div>
+{% endblock %}
