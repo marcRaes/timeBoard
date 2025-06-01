@@ -153,7 +153,7 @@ final class WorkDayController extends AbstractController
     }
 
     #[IsGranted('ROLE_USER')]
-    #[Route('/work-day/{id}/delete', name: 'work_day_delete', methods: ['POST'])]
+    #[Route('/work-day/delete/{id}', name: 'work_day_delete', methods: ['POST'])]
     public function delete(WorkDay $workDay, CsrfTokenManagerInterface $csrfTokenManager, Request $request): RedirectResponse
     {
         if (!$csrfTokenManager->isTokenValid(new CsrfToken('delete'.$workDay->getId(), $request->get('_token')))) {
@@ -167,11 +167,17 @@ final class WorkDayController extends AbstractController
             throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette journée de travail.');
         }
 
+        foreach($workDay->getWorkPeriods() as $period) {
+            $this->entityManager->remove($period);
+        }
+
         $this->entityManager->remove($workDay);
         $this->entityManager->flush();
 
         $this->addFlash('success', 'Journée supprimée avec succès.');
 
-        return $this->redirectToRoute('app_home');
+        return $this->redirectToRoute('work_day_show', [
+            'id' => $workDay->getWorkMonth()->getId(),
+        ]);
     }
 }

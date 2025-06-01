@@ -34,7 +34,7 @@ class WorkDay
     /**
      * @var Collection<int, WorkPeriod>
      */
-    #[ORM\OneToMany(targetEntity: WorkPeriod::class, mappedBy: 'workDay')]
+    #[ORM\OneToMany(targetEntity: WorkPeriod::class, mappedBy: 'workDay', cascade: ['persist'])]
     private Collection $workPeriods;
 
     public function __construct()

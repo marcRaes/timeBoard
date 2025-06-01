@@ -31,6 +31,7 @@ class WorkMonth
      * @var Collection<int, WorkDay>
      */
     #[ORM\OneToMany(targetEntity: WorkDay::class, mappedBy: 'workMonth')]
+    #[ORM\OrderBy(['date' => 'ASC'])]
     private Collection $workDays;
 
     public function __construct()
