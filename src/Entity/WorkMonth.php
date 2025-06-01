@@ -121,4 +121,33 @@ class WorkMonth
 
         return $this;
     }
+
+    public function getFormattedTotalTime(): string
+    {
+        $totalMinutes = 0;
+
+        foreach ($this->getWorkDays() as $workDay) {
+            foreach ($workDay->getWorkPeriods() as $period) {
+                $totalMinutes += $period->getDuration() ?? 0;
+            }
+        }
+
+        $hours = intdiv($totalMinutes, 60);
+        $minutes = $totalMinutes % 60;
+
+        return sprintf('%dH%02d', $hours, $minutes);
+    }
+
+    public function getLunchTickets(): int
+    {
+        $count = 0;
+
+        foreach ($this->getWorkDays() as $workDay) {
+            if ($workDay->hasLunchTicket()) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
 }

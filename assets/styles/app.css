@@ -9,3 +9,95 @@
     padding: 0;
     color: #6c757d;
 }
+
+.work-period-insert-line {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 32px;
+    transition: all 0.3s ease;
+}
+
+.line-part {
+    height: 2px;
+    background-color: #ccc;
+    transition: all 0.3s ease;
+}
+
+.line-part.left {
+    width: calc(50% - 24px);
+    margin-right: 8px;
+}
+
+.line-part.right {
+    width: calc(50% - 24px);
+    margin-left: 8px;
+}
+
+.plus-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background-color: white;
+    border: 2px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 1;
+}
+
+.plus {
+    font-size: 20px;
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+/* Hover Effects */
+.work-period-insert-line:hover .line-part {
+    background-color: #0d6efd;
+    opacity: 0.5;
+}
+
+.work-period-insert-line:hover .plus-circle {
+    border-color: #0d6efd;
+    box-shadow: 0 0 6px rgba(13, 110, 253, 0.3);
+}
+
+.work-period-extra {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+}
+
+.work-period-extra.show {
+    max-height: 2000px; /* suffisamment grand pour contenir le bloc */
+    opacity: 1;
+}
+
+.work-period-separator {
+    border-top: 1px solid #dee2e6;
+    margin: 1.5rem 0;
+}
+
+.work-period-remove-btn {
+    position: absolute;
+    left: -30px;
+    top: 0;
+    border: none;
+    background: none;
+    color: #dc3545;
+    font-weight: bold;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.work-period-removable {
+    position: relative;
+    padding-left: 1.5rem;
+    border-left: 3px solid #dc3545;
+    margin-left: 1rem;
+}
