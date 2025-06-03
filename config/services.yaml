@@ -20,5 +20,13 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Service\TimeSheetExporter:
+        arguments:
+            $templatePath: '%template_path%'
+            $pdfPath: '%pdf_path%'
+            $imgPath: '%img_path%'
+            $logoFilename: '%logo_filename%'
+            $signatureFilename: '%signature_filename%'
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
