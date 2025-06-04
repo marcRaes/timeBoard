@@ -7,7 +7,6 @@ use App\Entity\WorkDay;
 use App\Entity\WorkMonth;
 use App\Entity\WorkPeriod;
 use App\Form\WorkDayTypeForm;
-use App\Repository\WorkDayRepository;
 use App\Repository\WorkMonthRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -162,8 +161,9 @@ final class WorkDayController extends AbstractController
 
         /** @var User $user */
         $user = $this->getUser();
+        $workMonth = $workDay->getWorkMonth();
 
-        if ($workDay->getWorkMonth()->getUser() !== $user) {
+        if ($workMonth->getUser() !== $user) {
             throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette journée de travail.');
         }
 
@@ -173,6 +173,13 @@ final class WorkDayController extends AbstractController
 
         $this->entityManager->remove($workDay);
         $this->entityManager->flush();
+
+        if ($workMonth->getWorkDays()->count() === 0) {
+            $this->entityManager->remove($workMonth);
+            $this->entityManager->flush();
+
+            return $this->redirectToRoute('app_home');
+        }
 
         $this->addFlash('success', 'Journée supprimée avec succès.');
 
