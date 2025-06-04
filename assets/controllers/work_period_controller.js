@@ -5,7 +5,6 @@ export default class extends Controller {
         'container',
         'addButton',
         'hasLunchTicket',
-        'isFullDay',
         'workPeriodTemplate',
         'workPeriodEntry',
         'lunchTicketMessage'
@@ -28,7 +27,7 @@ export default class extends Controller {
 
     addPeriod(event) {
         event.preventDefault();
-        if (this.index >= 4 || this.isFullDayTarget.checked) return;
+        if (this.index >= 4) return;
 
         const template = this.workPeriodTemplateTarget.innerHTML.replace(/__name__/g, this.index);
         const fragment = document.createRange().createContextualFragment(template);
@@ -40,7 +39,7 @@ export default class extends Controller {
 
     removePeriod(event) {
         event.preventDefault();
-        if (this.isFullDayTarget.checked && this.workPeriodEntryTargets.length <= 1) return;
+        if (this.workPeriodEntryTargets.length <= 1) return;
 
         const entry = event.target.closest('.work-period-entry');
         if (entry) {
@@ -52,7 +51,7 @@ export default class extends Controller {
     }
 
     updateAddButtonVisibility() {
-        if (this.index >= 4 || this.isFullDayTarget.checked) {
+        if (this.index >= 4) {
             this.addButtonTarget.classList.add('d-none');
         } else {
             this.addButtonTarget.classList.remove('d-none');
@@ -124,32 +123,12 @@ export default class extends Controller {
             const removeButton = entry.querySelector('.remove-period-button');
 
             if (removeButton) {
-                if (index >= 2) {
+                if (index >= 1) {
                     removeButton.classList.remove('d-none');
                 } else {
                     removeButton.classList.add('d-none');
                 }
             }
         });
-    }
-
-    handleFullDayChange(event) {
-        if (event.target.checked) {
-            // Supprimer tous les créneaux sauf le premier
-            while (this.workPeriodEntryTargets.length > 1) {
-                this.workPeriodEntryTargets[1].remove();
-            }
-            this.index = 1;
-        } else {
-            if (this.workPeriodEntryTargets.length < 2) {
-                const template = this.workPeriodTemplateTarget.innerHTML.replace(/__name__/g, this.index);
-                const fragment = document.createRange().createContextualFragment(template);
-                this.containerTarget.appendChild(fragment);
-                this.index++;
-            }
-        }
-        this.updateAddButtonVisibility();
-        this.updateLunchTicketVisibility();
-        this.updateRemoveButtonsVisibility();
     }
 }

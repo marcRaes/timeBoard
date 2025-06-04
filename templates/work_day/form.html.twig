@@ -1,10 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TimeBoard - {{ is_editing ? 'Modifier' : 'Ajouter' }} une journée de travail{% endblock %}
+{% set type = isNew ? 'Ajouter' : 'Modifier' %}
+{% block title %}TimeBoard - {{ type }} une journée de travail{% endblock %}
 
 {% block body %}
     <div class="container py-4">
-        <h1 class="mb-4">{{ is_editing ? 'Modifier la journée de travail' : 'Ajouter une journée de travail' }}</h1>
+        <h1 class="mb-4">{{ type }} une journée de travail</h1>
         <div class="d-flex justify-content-end">
             <a href="{{ path('app_home') }}" class="btn-close" aria-label="Fermer"></a>
         </div>
@@ -14,15 +15,6 @@
 
             <div class="mb-3">
                 {{ form_row(workDayForm.date) }}
-            </div>
-
-            <div class="mb-3">
-                {{ form_row(workDayForm.isFullDay, {
-                    attr: {
-                        'data-work-period-target': 'isFullDay',
-                        'data-action': 'change->work-period#handleFullDayChange'
-                    }
-                }) }}
             </div>
 
             <hr>

@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 
-class WorkDayTypeForm extends AbstractType
+class WorkDayType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -20,16 +20,12 @@ class WorkDayTypeForm extends AbstractType
                 'label' => 'Date',
                 'widget' => 'single_text',
             ])
-            ->add('isFullDay', CheckboxType::class, [
-                'label' => 'Journée complète',
-                'required' => false,
-            ])
             ->add('hasLunchTicket', CheckboxType::class, [
                 'label' => 'Ticket restaurant',
                 'required' => false,
             ])
             ->add('workPeriods', CollectionType::class, [
-                'entry_type' => WorkPeriodTypeForm::class,
+                'entry_type' => WorkPeriodType::class,
                 'entry_options' => ['label' => false],
                 'allow_add' => true,
                 'allow_delete' => true,

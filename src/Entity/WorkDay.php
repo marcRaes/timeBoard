@@ -26,9 +26,6 @@ class WorkDay
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column]
-    private ?bool $isFullDay = null;
-
-    #[ORM\Column]
     private ?bool $hasLunchTicket = null;
 
     /**
@@ -67,18 +64,6 @@ class WorkDay
     public function setDate(\DateTimeImmutable $date): static
     {
         $this->date = $date;
-
-        return $this;
-    }
-
-    public function isFullDay(): ?bool
-    {
-        return $this->isFullDay;
-    }
-
-    public function setIsFullDay(bool $isFullDay): static
-    {
-        $this->isFullDay = $isFullDay;
 
         return $this;
     }
