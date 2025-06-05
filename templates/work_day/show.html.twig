@@ -8,56 +8,58 @@
         <h1 class="mb-4">Mois de travail : {{ monthDate|trans }} {{ workMonth.year }}</h1>
 
         {% for workDay in workMonth.workDays %}
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Journée du {{ workDay.date|date('d/m/Y') }}</strong>
-                    <div>
-                        <a href="{{ path('work_day_update', { id: workDay.id }) }}" class="btn btn-sm btn-primary">✏️ Modifier</a>
-                        <form method="post" action="{{ path('work_day_delete', { id: workDay.id }) }}" class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workDay.id) }}">
-                            <button class="btn btn-sm btn-danger">🗑️ Supprimer</button>
-                        </form>
+            <turbo-frame id="work-day-form-frame">
+                <div class="card mb-4">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <strong>Journée du {{ workDay.date|date('d/m/Y') }}</strong>
+                        <div>
+                            <a href="{{ path('work_day_update', { id: workDay.id }) }}" class="btn btn-sm btn-primary">✏️ Modifier</a>
+                            <form method="post" action="{{ path('work_day_delete', { id: workDay.id }) }}" class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
+                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workDay.id) }}">
+                                <button class="btn btn-sm btn-danger">🗑️ Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="card-body p-0">
+                        <table class="table table-sm mb-0 table-striped">
+                            <thead class="table-light">
+                            <tr>
+                                <th>Début</th>
+                                <th>Fin</th>
+                                <th>Durée</th>
+                                <th>Lieu</th>
+                                <th>Agent remplacé</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for period in workDay.workPeriods %}
+                                <tr>
+                                    <td>{{ period.timeStart ? period.timeStart|date('H:i') : '-' }}</td>
+                                    <td>{{ period.timeEnd ? period.timeEnd|date('H:i') : '-' }}</td>
+                                    <td>{{ period.duration ? period.duration|calculate_work_duration : '-' }}</td>
+                                    <td>{{ period.location ?: '-' }}</td>
+                                    <td>{{ period.replacedAgent ?: '-' }}</td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="7" class="text-center text-muted">Aucune période renseignée.</td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="card-footer">
+                        Ticket restaurant :
+                        {% if workDay.hasLunchTicket %}
+                            <span class="badge bg-success">Oui</span>
+                        {% else %}
+                            <span class="badge bg-secondary">Non</span>
+                        {% endif %}
                     </div>
                 </div>
-
-                <div class="card-body p-0">
-                    <table class="table table-sm mb-0 table-striped">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Début</th>
-                            <th>Fin</th>
-                            <th>Durée</th>
-                            <th>Lieu</th>
-                            <th>Agent remplacé</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for period in workDay.workPeriods %}
-                            <tr>
-                                <td>{{ period.timeStart ? period.timeStart|date('H:i') : '-' }}</td>
-                                <td>{{ period.timeEnd ? period.timeEnd|date('H:i') : '-' }}</td>
-                                <td>{{ period.duration ? period.duration|calculate_work_duration : '-' }}</td>
-                                <td>{{ period.location ?: '-' }}</td>
-                                <td>{{ period.replacedAgent ?: '-' }}</td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="7" class="text-center text-muted">Aucune période renseignée.</td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="card-footer">
-                    Ticket restaurant :
-                    {% if workDay.hasLunchTicket %}
-                        <span class="badge bg-success">Oui</span>
-                    {% else %}
-                        <span class="badge bg-secondary">Non</span>
-                    {% endif %}
-                </div>
-            </div>
+            </turbo-frame>
         {% else %}
             <div class="alert alert-info">Aucune journée enregistrée pour ce mois.</div>
         {% endfor %}

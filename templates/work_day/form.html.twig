@@ -10,102 +10,125 @@
             <a href="{{ path('app_home') }}" class="btn-close" aria-label="Fermer"></a>
         </div>
 
-        <div data-controller="work-period">
-            {{ form_start(workDayForm) }}
+        <turbo-frame id="work-day-form-frame">
+            <div data-controller="work-form">
+                {{ form_start(workDayForm, {
+                    action: isNew ? path('work_day_create') : path('work_day_update', {'id': app.request.get('id')}),
+                }) }}
+                {{ form_errors(workDayForm) }}
 
-            <div class="mb-3">
-                {{ form_row(workDayForm.date) }}
-            </div>
+                <div class="mb-3">
+                    {{ form_row(workDayForm.date) }}
+                </div>
 
-            <hr>
+                <hr>
 
-            <div data-work-period-target="container">
-                {% for workPeriodForm in workDayForm.workPeriods %}
-                    <div class="work-period-entry mb-4" data-work-period-target="workPeriodEntry">
+                <div data-work-form-target="container">
+                    {% for workPeriodForm in workDayForm.workPeriods %}
+                        <div class="work-form-entry mb-4" data-work-form-target="workFormEntry">
+                            <div data-error-target="timeError" class="text-danger small d-none">
+                                L'heure de début doit être inférieure à l'heure de fin.
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    {{ form_row(workPeriodForm.timeStart) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(workPeriodForm.timeEnd) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(workPeriodForm.durationDisplay, {
+                                        attr: {
+                                            'readonly': true,
+                                            'disabled': true
+                                        }
+                                    }) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(workPeriodForm.duration) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(workPeriodForm.location) }}
+                                </div>
+                                <div class="col-md-6">
+                                    {{ form_row(workPeriodForm.replacedAgent) }}
+                                </div>
+                            </div>
+
+                            <button type="button" class="btn btn-danger mt-2 remove-period-button d-none" data-action="click->work-form#removePeriod">
+                                Supprimer
+                            </button>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <template data-work-form-target="workFormTemplate">
+                    <div class="work-form-entry mb-4" data-work-form-target="workFormEntry">
                         <div class="row">
                             <div class="col-md-6">
-                                {{ form_row(workPeriodForm.timeStart) }}
+                                {{ form_row(workDayForm.workPeriods.vars.prototype.timeStart) | replace({ '__name__': '__name__' })|raw }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(workPeriodForm.timeEnd) }}
+                                {{ form_row(workDayForm.workPeriods.vars.prototype.timeEnd) | replace({ '__name__': '__name__' })|raw }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(workPeriodForm.durationDisplay, {
+                                {{ form_row(workDayForm.workPeriods.vars.prototype.durationDisplay, {
                                     attr: {
                                         'readonly': true,
                                         'disabled': true
                                     }
-                                }) }}
+                                }) | replace({ '__name__': '__name__' })|raw }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(workPeriodForm.duration) }}
+                                {{ form_row(workDayForm.workPeriods.vars.prototype.duration) | replace({ '__name__': '__name__' })|raw }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(workPeriodForm.location) }}
+                                {{ form_row(workDayForm.workPeriods.vars.prototype.location) | replace({ '__name__': '__name__' })|raw }}
                             </div>
                             <div class="col-md-6">
-                                {{ form_row(workPeriodForm.replacedAgent) }}
+                                {{ form_row(workDayForm.workPeriods.vars.prototype.replacedAgent) | replace({ '__name__': '__name__' })|raw }}
                             </div>
                         </div>
-
-                        <button type="button" class="btn btn-danger mt-2 remove-period-button d-none" data-action="click->work-period#removePeriod">
+                        <button type="button" class="btn btn-danger mt-2 remove-period-button d-none" data-action="click->work-form#removePeriod">
                             Supprimer
                         </button>
                     </div>
-                {% endfor %}
-            </div>
+                </template>
 
-            <template data-work-period-target="workPeriodTemplate">
-                <div class="work-period-entry mb-4" data-work-period-target="workPeriodEntry">
-                    <div class="row">
-                        <div class="col-md-6">
-                            {{ form_row(workDayForm.workPeriods.vars.prototype.timeStart) | replace({ '__name__': '__name__' })|raw }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(workDayForm.workPeriods.vars.prototype.timeEnd) | replace({ '__name__': '__name__' })|raw }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(workDayForm.workPeriods.vars.prototype.durationDisplay, {
-                                attr: {
-                                    'readonly': true,
-                                    'disabled': true
-                                }
-                            }) | replace({ '__name__': '__name__' })|raw }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(workDayForm.workPeriods.vars.prototype.duration) | replace({ '__name__': '__name__' })|raw }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(workDayForm.workPeriods.vars.prototype.location) | replace({ '__name__': '__name__' })|raw }}
-                        </div>
-                        <div class="col-md-6">
-                            {{ form_row(workDayForm.workPeriods.vars.prototype.replacedAgent) | replace({ '__name__': '__name__' })|raw }}
-                        </div>
-                    </div>
-                    <button type="button" class="btn btn-danger mt-2 remove-period-button d-none" data-action="click->work-period#removePeriod">
-                        Supprimer
-                    </button>
+                <div class="d-none" data-work-form-target="hasLunchTicket">
+                    {{ form_row(workDayForm.hasLunchTicket) }}
                 </div>
-            </template>
 
-            <div class="d-none" data-work-period-target="hasLunchTicket">
-                {{ form_row(workDayForm.hasLunchTicket) }}
+                <div class="alert alert-info mb-3 d-none" data-work-form-target="lunchTicketMessage">
+                    <i class="bi bi-ticket-perforated"></i>
+                    Un ticket restaurant vous est attribué pour cette journée
+                </div>
+
+                <div class="text-center my-4">
+                    <button type="button" class="btn btn-outline-primary" data-work-form-target="addButton" data-action="click->work-form#addPeriod">Ajouter un créneau</button>
+                </div>
+
+                <div>
+                    <span
+                            data-bs-toggle="tooltip"
+                            data-bs-placement="top"
+                            title="Veuillez remplir correctement toutes les périodes de travail"
+                            id="submit-button-wrapper"
+                    >
+                        <button
+                                type="submit"
+                                class="btn btn-primary"
+                                data-action="click->work-form#preventIfInvalid"
+                                data-work-form-target="submitButton"
+                                disabled
+                        >
+                            Enregistrer
+                        </button>
+                    </span>
+                </div>
+
+                {{ form_end(workDayForm) }}
             </div>
-
-            <div class="alert alert-info mb-3 d-none" data-work-period-target="lunchTicketMessage">
-                <i class="bi bi-ticket-perforated"></i>
-                Un ticket restaurant vous est attribué pour cette journée
-            </div>
-
-            <div class="text-center my-4">
-                <button type="button" class="btn btn-outline-primary" data-work-period-target="addButton" data-action="click->work-period#addPeriod">Ajouter un créneau</button>
-            </div>
-
-            <div>
-                <button type="submit" class="btn btn-success">Enregistrer</button>
-            </div>
-
-            {{ form_end(workDayForm) }}
-        </div>
+        </turbo-frame>
     </div>
 {% endblock %}

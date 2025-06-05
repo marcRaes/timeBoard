@@ -9,6 +9,7 @@ use App\Form\WorkDayType;
 use App\Service\WorkDayManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[IsGranted('ROLE_USER')]
 final class WorkDayController extends AbstractController
@@ -24,7 +26,8 @@ final class WorkDayController extends AbstractController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly WorkDayManager $workDayManager,
-        private readonly CsrfTokenManagerInterface $csrfTokenManager
+        private readonly CsrfTokenManagerInterface $csrfTokenManager,
+        private readonly ValidatorInterface $validator
     ) {}
 
     #[Route('/work-day/create', name: 'work_day_create', methods: ['GET', 'POST'])]
@@ -35,14 +38,24 @@ final class WorkDayController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $workMonth = $this->workDayManager->initializeWorkMonth($user, $workDay);
-            $this->workDayManager->cleanPeriodsInvalid($workDay);
-            $this->workDayManager->save($workDay, $workMonth);
+        if ($form->isSubmitted()) {
+            $workMonth = $this->workDayManager->initializeWorkMonth($user, $form->getData());
+            $form->getData()->setWorkMonth($workMonth);
 
-            $this->addFlash('success', 'Journée ajoutée avec succès.');
+            $violations = $this->validator->validate($form->getData());
 
-            return $this->redirectToRoute('app_home');
+            if (count($violations) === 0 && $form->isValid()) {
+                $this->workDayManager->cleanPeriodsInvalid($form->getData());
+                $this->workDayManager->save($form->getData(), $workMonth);
+
+                $this->addFlash('success', 'Journée ajoutée avec succès.');
+
+                return $this->redirectToRoute('app_home');
+            }
+
+            foreach ($violations as $violation) {
+                $form->get($violation->getPropertyPath())?->addError(new FormError($violation->getMessage()));
+            }
         }
 
         return $this->render('work_day/form.html.twig', [
@@ -57,16 +70,26 @@ final class WorkDayController extends AbstractController
         $form = $this->createForm(WorkDayType::class, $workDay);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $workMonth = $this->workDayManager->initializeWorkMonth($user, $workDay);
-            $this->workDayManager->cleanPeriodsInvalid($workDay);
-            $this->workDayManager->save($workDay, $workMonth);
+        if ($form->isSubmitted()) {
+            $workMonth = $this->workDayManager->initializeWorkMonth($user, $form->getData());
+            $form->getData()->setWorkMonth($workMonth);
 
-            $this->addFlash('success', 'Journée modifiée avec succès.');
+            $violations = $this->validator->validate($form->getData());
 
-            return $this->redirectToRoute('work_day_show', [
-                'id' => $workMonth->getId(),
-            ]);
+            if (count($violations) === 0 && $form->isValid()) {
+                $this->workDayManager->cleanPeriodsInvalid($form->getData());
+                $this->workDayManager->save($form->getData(), $workMonth);
+
+                $this->addFlash('success', 'Journée modifiée avec succès.');
+
+                return $this->redirectToRoute('work_day_show', [
+                    'id' => $workMonth->getId(),
+                ]);
+            }
+
+            foreach ($violations as $violation) {
+                $form->get($violation->getPropertyPath())?->addError(new FormError($violation->getMessage()));
+            }
         }
 
         return $this->render('work_day/form.html.twig', [

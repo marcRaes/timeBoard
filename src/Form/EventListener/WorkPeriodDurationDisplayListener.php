@@ -18,6 +18,7 @@ class WorkPeriodDurationDisplayListener implements EventSubscriberInterface
     {
         return [
             FormEvents::POST_SET_DATA => 'onPostSetData',
+            FormEvents::PRE_SUBMIT => 'onPreSubmit',
         ];
     }
 
@@ -33,5 +34,17 @@ class WorkPeriodDurationDisplayListener implements EventSubscriberInterface
         $form->get('durationDisplay')->setData(
             $this->formatter->format($data->getDuration())
         );
+    }
+
+    public function onPreSubmit(FormEvent $event): void
+    {
+        $data = $event->getData();
+
+        if (empty($data['duration'])) {
+            return;
+        }
+
+        $data['durationDisplay'] = $this->formatter->format((int) $data['duration']);
+        $event->setData($data);
     }
 }

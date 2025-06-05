@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: WorkDayRepository::class)]
+#[ORM\UniqueConstraint(columns: ['date', 'work_month_id'])]
 #[UniqueEntity(fields: ['date', 'workMonth'], message: 'Journée de travail déjà existante à cette date.', errorPath: 'date')]
 class WorkDay
 {
@@ -22,7 +23,7 @@ class WorkDay
     #[ORM\JoinColumn(nullable: false)]
     private ?WorkMonth $workMonth = null;
 
-    #[ORM\Column(type: Types::DATE_IMMUTABLE, unique: true)]
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     private ?\DateTimeImmutable $date = null;
 
     #[ORM\Column]
