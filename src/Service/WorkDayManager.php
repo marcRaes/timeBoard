@@ -70,4 +70,17 @@ readonly class WorkDayManager
         $this->entityManager->persist($workDay);
         $this->entityManager->flush();
     }
+
+    public function deleteWorkDay(WorkDay $workDay): void
+    {
+        $workMonth = $workDay->getWorkMonth();
+        $this->entityManager->remove($workDay);
+
+        // Si c’était la dernière journée dans ce mois, on supprime le mois aussi
+        if ($workMonth->getWorkDays()->count() === 1) {
+            $this->entityManager->remove($workMonth);
+        }
+
+        $this->entityManager->flush();
+    }
 }

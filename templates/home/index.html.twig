@@ -8,7 +8,7 @@
 
         <div class="mb-4">
             <turbo-frame id="work-day-form-frame">
-                <a href="{{ path('work_day_create') }}" class="btn btn-primary">
+                <a href="{{ path('app_work_day_create') }}" class="btn btn-primary">
                     Ajouter une journée de travail
                 </a>
             </turbo-frame>
@@ -33,7 +33,7 @@
                                 <strong>Tickets restaurant :</strong> {{ workMonth.lunchTickets }}
                             </p>
                             <div class="d-flex justify-content-between">
-                                <a href="{{ path('work_day_show', {'id': workMonth.id}) }}" class="btn btn-outline-secondary btn-sm">
+                                <a href="{{ path('app_work_month_show', {'id': workMonth.id}) }}" class="btn btn-outline-secondary btn-sm">
                                     Voir
                                 </a>
                                 <a href="{{ path('app_timesheet_pdf', {'id': workMonth.id}) }}" class="btn btn-outline-success btn-sm">

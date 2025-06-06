@@ -13,8 +13,8 @@
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <strong>Journée du {{ workDay.date|date('d/m/Y') }}</strong>
                         <div>
-                            <a href="{{ path('work_day_update', { id: workDay.id }) }}" class="btn btn-sm btn-primary">✏️ Modifier</a>
-                            <form method="post" action="{{ path('work_day_delete', { id: workDay.id }) }}" class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
+                            <a href="{{ path('app_work_day_update', { id: workDay.id }) }}" class="btn btn-sm btn-primary">✏️ Modifier</a>
+                            <form method="post" action="{{ path('app_work_day_delete', { id: workDay.id }) }}" class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workDay.id) }}">
                                 <button class="btn btn-sm btn-danger">🗑️ Supprimer</button>
                             </form>

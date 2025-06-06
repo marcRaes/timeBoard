@@ -4,10 +4,8 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\WorkDay;
-use App\Entity\WorkMonth;
 use App\Form\WorkDayType;
 use App\Service\WorkDayManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -21,16 +19,16 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[IsGranted('ROLE_USER')]
+#[Route('/work-day')]
 final class WorkDayController extends AbstractController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly WorkDayManager $workDayManager,
         private readonly CsrfTokenManagerInterface $csrfTokenManager,
         private readonly ValidatorInterface $validator
     ) {}
 
-    #[Route('/work-day/create', name: 'work_day_create', methods: ['GET', 'POST'])]
+    #[Route('/create', name: 'app_work_day_create', methods: ['GET', 'POST'])]
     public function create(Request $request, #[CurrentUser] User $user): Response
     {
         $workDay = $this->workDayManager->initializeCreate();
@@ -64,7 +62,7 @@ final class WorkDayController extends AbstractController
         ]);
     }
 
-    #[Route('/work-day/update/{id}', name: 'work_day_update', methods: ['GET', 'POST'])]
+    #[Route('/update/{id}', name: 'app_work_day_update', methods: ['GET', 'POST'])]
     public function update(WorkDay $workDay, Request $request, #[CurrentUser] User $user): Response
     {
         $form = $this->createForm(WorkDayType::class, $workDay);
@@ -94,51 +92,27 @@ final class WorkDayController extends AbstractController
 
         return $this->render('work_day/form.html.twig', [
             'workDayForm' => $form,
+            'workDay' => $workDay,
             'isNew' => false,
         ]);
     }
 
-    #[Route('/work-day/show/{id}', name: 'work_day_show', methods: ['GET', 'POST'])]
-    public function show(WorkMonth $workMonth, #[CurrentUser] User $user): Response
-    {
-        if ($workMonth->getUser() !== $user) {
-            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à voir cette journée de travail.');
-        }
-
-        return $this->render('work_day/show.html.twig', [
-            'workMonth' => $workMonth,
-        ]);
-    }
-
     #[IsGranted('ROLE_USER')]
-    #[Route('/work-day/delete/{id}', name: 'work_day_delete', methods: ['POST'])]
+    #[Route('/delete/{id}', name: 'app_work_day_delete', methods: ['POST'])]
     public function delete(WorkDay $workDay, Request $request, #[CurrentUser] User $user): RedirectResponse
     {
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('delete'.$workDay->getId(), $request->get('_token')))) {
             throw $this->createAccessDeniedException('Jeton CSRF invalide.');
         }
 
-        $workMonth = $workDay->getWorkMonth();
-
-        if ($workMonth->getUser() !== $user) {
-            throw $this->createAccessDeniedException('Vous n\'êtes pas autorisé à supprimer cette journée de travail.');
-        }
-
-        foreach($workDay->getWorkPeriods() as $period) {
-            $this->entityManager->remove($period);
-        }
-
-        $this->entityManager->remove($workDay);
-        $this->entityManager->flush();
-
-        if ($workMonth->getWorkDays()->count() === 0) {
-            $this->entityManager->remove($workMonth);
-            $this->entityManager->flush();
-
-            return $this->redirectToRoute('app_home');
-        }
+        $this->denyAccessUnlessGranted('DELETE', $workDay, 'Vous n\'êtes pas autorisé à supprimer cette journée de travail.');
+        $this->workDayManager->deleteWorkDay($workDay);
 
         $this->addFlash('success', 'Journée supprimée avec succès.');
+
+        if (!$workDay->getWorkMonth()->getId()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         return $this->redirectToRoute('work_day_show', [
             'id' => $workDay->getWorkMonth()->getId(),

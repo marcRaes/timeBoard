@@ -30,8 +30,8 @@ class WorkDayType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
+                'delete_empty' => true,
                 'prototype' => true,
-                'prototype_name' => '__name__',
                 'constraints' => [
                     new Count([
                         'max' => 4,

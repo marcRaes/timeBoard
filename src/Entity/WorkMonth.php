@@ -30,7 +30,7 @@ class WorkMonth
     /**
      * @var Collection<int, WorkDay>
      */
-    #[ORM\OneToMany(targetEntity: WorkDay::class, mappedBy: 'workMonth')]
+    #[ORM\OneToMany(targetEntity: WorkDay::class, mappedBy: 'workMonth', cascade: ['persist','remove'], orphanRemoval: true)]
     #[ORM\OrderBy(['date' => 'ASC'])]
     private Collection $workDays;
 

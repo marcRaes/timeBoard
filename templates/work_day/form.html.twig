@@ -13,7 +13,7 @@
         <turbo-frame id="work-day-form-frame">
             <div data-controller="work-form">
                 {{ form_start(workDayForm, {
-                    action: isNew ? path('work_day_create') : path('work_day_update', {'id': app.request.get('id')}),
+                    action: isNew ? path('app_work_day_create') : path('app_work_day_update', {'id': workDay.id}),
                 }) }}
                 {{ form_errors(workDayForm) }}
 
