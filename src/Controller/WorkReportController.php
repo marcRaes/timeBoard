@@ -4,14 +4,16 @@ namespace App\Controller;
 
 use App\Entity\WorkMonth;
 use App\Entity\WorkReportSubmission;
+use App\Exception\InvalidAttachmentException;
+use App\Exception\WorkReportException;
 use App\Form\WorkReportSubmissionType;
 use App\Service\WorkReportMailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
@@ -22,7 +24,6 @@ final class WorkReportController extends AbstractController
 {
     public function __construct(
         private readonly WorkReportMailer $reportMailer,
-        private readonly SluggerInterface $slugger
     ) {}
 
     /**
@@ -43,17 +44,35 @@ final class WorkReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->reportMailer->send(
-                $workMonth,
-                $workReportSubmission
-            );
+            try {
+                $this->reportMailer->send(
+                    $workMonth,
+                    $workReportSubmission
+                );
 
-            $this->addFlash('success', 'Le rapport de travail a été envoyé avec succès.');
-            return $this->redirectToRoute('app_home');
+                $this->addFlash('success', 'Le rapport de travail a été envoyé avec succès.');
+
+                if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
+                    return new Response('<turbo-stream action="replace" target="work-report-form-frame"><template>
+                        <script>window.location.reload();</script>
+                        </template></turbo-stream>', 200, ['Content-Type' => 'text/vnd.turbo-stream.html']
+                    );
+                }
+
+                return $this->redirectToRoute('app_home');
+            } catch (WorkReportException $exception) {
+                $field = $exception->getField();
+                if ($field) {
+                    $form->get($field)->addError(new FormError($exception->getUserMessage()));
+                } else {
+                    $form->addError(new FormError($exception->getUserMessage()));
+                }
+            }
         }
 
-        return $this->render('work_report/index.html.twig', [
+        return $this->render('work_report/form.html.twig', [
             'form' => $form,
+            'workMonth' => $workMonth,
         ]);
     }
 }

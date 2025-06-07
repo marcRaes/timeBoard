@@ -6,9 +6,6 @@
 {% block body %}
     <div class="container py-4">
         <h1 class="mb-4">{{ type }} une journée de travail</h1>
-        <div class="d-flex justify-content-end">
-            <a href="{{ path('app_home') }}" class="btn-close" aria-label="Fermer"></a>
-        </div>
 
         <turbo-frame id="work-day-form-frame">
             <div data-controller="work-form">

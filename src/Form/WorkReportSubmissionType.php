@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -24,15 +25,17 @@ class WorkReportSubmissionType extends AbstractType
                 'label' => 'Frais de transport (facultatif)',
                 'required' => false,
                 'constraints' => [
-                    new Assert\Image([
+                    new Assert\File([
                         'maxSize' => '2M',
+                        'maxSizeMessage' => 'Le justificatif de transport ne doit pas dépasser 2 Mo.',
                         'mimeTypes' => ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'],
+                        'mimeTypesMessage' => 'Le format du justificatif de transport n\'est pas supporté. Veuillez joindre un PDF, JPEG, PNG ou GIF.',
                     ]),
                 ],
             ])
-            ->add('submit', HiddenType::class, [
-                'mapped' => false,
+            ->add('submit', SubmitType::class, [
                 'label' => 'Envoyer',
+                'attr' => ['class' => 'btn btn-primary'],
             ])
         ;
     }

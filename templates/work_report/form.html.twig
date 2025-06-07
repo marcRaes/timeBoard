@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Envoie d'une fiche d'heure{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <h1 class="mb-4">Envoie d'une fiche d'heure</h1>
+
+        <turbo-frame id="work-report-form-frame">
+            <div data-controller="work-report">
+                {{ form_start(form, {
+                    action: path('app_work_report_submit', {'id': workMonth.id}),
+                }) }}
+
+                {{ form_errors(form) }}
+                {{ form_row(form.recipientEmail) }}
+                {{ form_row(form.attachmentPath, {
+                    attr: { accept:
+                        ".pdf,image/*",
+                        'data-max-size': 2097152,
+                        'data-work-report-target': 'fileInput',
+                        'data-action': 'change->work-report#validateFile'
+                    }
+                }) }}
+                <small class="form-text text-muted">Taille max : 2 Mo. Formats acceptés : PDF, JPG, PNG, GIF.</small>
+                <div data-work-report-target="error" class="alert alert-danger mt-2" style="display: none"></div>
+                {{ form_row(form.submit) }}
+
+                {{ form_end(form) }}
+            </div>
+        </turbo-frame>
+    </div>
+{% endblock %}

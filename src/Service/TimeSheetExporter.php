@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\PageSetup;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TimeSheetExporter
@@ -18,8 +19,8 @@ class TimeSheetExporter
     private Spreadsheet $spreadsheet;
 
     public function __construct(
-        private readonly TranslatorInterface   $translator,
         private readonly WorkDurationFormatter $formatter,
+        private readonly MonthNameHelper $monthNameHelper,
         private readonly string $templatePath,
         private readonly string $pdfPath,
         private readonly string $imgPath,
@@ -54,16 +55,9 @@ class TimeSheetExporter
             'fiche_heure_%s_%s_%s_%s.pdf',
             strtolower($workMonth->getUser()->getLastName()),
             strtolower($workMonth->getUser()->getFirstName()),
-            strtolower($this->getLocalizedMonthName($workMonth->getMonth())),
+            strtolower($this->monthNameHelper->getLocalizedMonthName($workMonth->getMonth())),
             $workMonth->getYear()
         );
-    }
-
-    private function getLocalizedMonthName(int $month): string
-    {
-        $date = \DateTime::createFromFormat('!m', $month);
-
-        return $this->translator->trans($date->format('F'));
     }
 
     private function ensureDirectoryExists(): void
@@ -78,7 +72,7 @@ class TimeSheetExporter
     {
         $this->insertImage($sheet, $this->logoFilename, 'A2', 70);
 
-        $sheet->setCellValue('E4', $this->getLocalizedMonthName($workMonth->getMonth()));
+        $sheet->setCellValue('E4', $this->monthNameHelper->getLocalizedMonthName($workMonth->getMonth()));
         $sheet->setCellValue('H4', $workMonth->getYear());
         $sheet->setCellValue('B8', $workMonth->getUser()->getLastName());
         $sheet->setCellValue('B10', $workMonth->getUser()->getFirstName());

@@ -188,4 +188,14 @@ class WorkMonth
 
         return $this;
     }
+
+    public function isSent(): bool
+    {
+        foreach ($this->getWorkReportSubmissions() as $submission) {
+            if ($submission->getStatus() === WorkReportSubmission::STATUS_SENT) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

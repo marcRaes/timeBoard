@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\WorkDay;
+use App\Exception\WorkMonthAlreadySentException;
 use App\Form\WorkDayType;
+use App\Service\MonthNameHelper;
 use App\Service\WorkDayManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -43,12 +45,24 @@ final class WorkDayController extends AbstractController
             $violations = $this->validator->validate($form->getData());
 
             if (count($violations) === 0 && $form->isValid()) {
-                $this->workDayManager->cleanPeriodsInvalid($form->getData());
-                $this->workDayManager->save($form->getData(), $workMonth);
+                try {
+                    $this->workDayManager->checkCanAddWorkDay($workMonth);
+                    $this->workDayManager->cleanPeriodsInvalid($form->getData());
+                    $this->workDayManager->save($form->getData(), $workMonth);
 
-                $this->addFlash('success', 'Journée ajoutée avec succès.');
+                    $this->addFlash('success', 'Journée ajoutée avec succès.');
 
-                return $this->redirectToRoute('app_home');
+                    if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
+                        return new Response('<turbo-stream action="replace" target="work-day-form-frame"><template>
+                    <script>window.location.reload();</script>
+                    </template></turbo-stream>', 200, ['Content-Type' => 'text/vnd.turbo-stream.html']
+                        );
+                    }
+
+                    return $this->redirectToRoute('app_home');
+                } catch (WorkMonthAlreadySentException $exception) {
+                    $form->addError(new FormError($exception->getMessage()));
+                }
             }
 
             foreach ($violations as $violation) {
@@ -97,9 +111,8 @@ final class WorkDayController extends AbstractController
         ]);
     }
 
-    #[IsGranted('ROLE_USER')]
     #[Route('/delete/{id}', name: 'app_work_day_delete', methods: ['POST'])]
-    public function delete(WorkDay $workDay, Request $request, #[CurrentUser] User $user): RedirectResponse
+    public function delete(WorkDay $workDay, Request $request): RedirectResponse
     {
         if (!$this->csrfTokenManager->isTokenValid(new CsrfToken('delete'.$workDay->getId(), $request->get('_token')))) {
             throw $this->createAccessDeniedException('Jeton CSRF invalide.');

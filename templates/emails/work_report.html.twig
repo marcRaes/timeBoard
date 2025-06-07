@@ -1,11 +1,41 @@
-<!DOCTYPE html>
-<html lang="fr">
-<body>
-<p>Bonjour {{ submission.getWorkMonth().getUser().getFirstName() }},</p>
+{% extends 'base.html.twig' %}
+{% set year = submission.getWorkMonth().getYear() %}
+{% set monthDate = (year ~ '-' ~ '%02d'|format(submission.getWorkMonth().getMonth()) ~ '-01')|date('F') %}
+{% set lastName = submission.getWorkMonth().getUser().getLastName() %}
+{% set firstName = submission.getWorkMonth().getUser().getFirstName() %}
 
-<p>Ci-joint le rapport de travail pour le mois de
-    {{ submission.getWorkMonth().getMonth() }}/{{ submission.getWorkMonth().getYear() }}.</p>
+{% block title %}
+    {% if submission.getAttachmentPath() is not empty %}
+        Fiche heure + justificatif transport {{ monthDate|trans }} {{ year }}
+    {% else %}
+        Fiche heure {{ monthDate|trans }} {{ year }}
+    {% endif %}
+{% endblock %}
 
-<p>Cordialement,<br>Service TimeSheetBoard</p>
-</body>
-</html>
+{% block stylesheets %}
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        {% if submission.getAttachmentPath() is not empty %}
+            <h1>Fiche heure + justificatif transport {{ monthDate|trans }} {{ year }}</h1>
+
+            <p>Bonjour,</p>
+            <p>Vous trouverez ci-joint ma fiche d'heure et mon justificatif de transport pour le mois de {{ monthDate|trans }}.</p>
+        {% else %}
+            <h1>Fiche heure {{ monthDate|trans }} {{ year }}</h1>
+
+            <p>Bonjour,</p>
+            <p>Vous trouverez ci-joint ma fiche d'heure pour le mois de {{ monthDate|trans }}.</p>
+        {% endif %}
+
+        <p>
+            Cordialement,<br>
+            {{ firstName }}
+        </p>
+    </div>
+{% endblock %}

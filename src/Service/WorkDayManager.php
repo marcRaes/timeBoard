@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Entity\WorkDay;
 use App\Entity\WorkMonth;
 use App\Entity\WorkPeriod;
+use App\Exception\WorkMonthAlreadySentException;
 use App\Repository\WorkMonthRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -13,7 +14,8 @@ readonly class WorkDayManager
 {
     public function __construct(
         private WorkMonthRepository $workMonthRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private MonthNameHelper $monthNameHelper
     ) {}
 
     public function initializeCreate(): WorkDay
@@ -82,5 +84,12 @@ readonly class WorkDayManager
         }
 
         $this->entityManager->flush();
+    }
+
+    public function checkCanAddWorkDay(WorkMonth $workMonth): void
+    {
+        if ($workMonth->isSent()) {
+            throw new WorkMonthAlreadySentException(sprintf("Impossible, vous avez déja envoyé le rapport pour le mois de %s %d.", $this->monthNameHelper->getLocalizedMonthName($workMonth->getMonth()), $workMonth->getYear()));
+        }
     }
 }
