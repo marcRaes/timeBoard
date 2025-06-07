@@ -7,6 +7,17 @@
     <div class="container my-4">
         <h1 class="mb-4">Mois de travail : {{ monthDate|trans }} {{ workMonth.year }}</h1>
 
+        <p>Nombre de journées travaillées : {{ workMonth.workDays|length }}</p>
+        <p>Total heures : {{ workMonth.formattedTotalTime }}</p>
+        <p>Tickets restaurant : {{ workMonth.lunchTickets }}</p>
+
+        <div class="mb-4">
+                <a href="{{ path('app_work_report_submit', { 'id': workMonth.id }) }}" class="btn btn-primary">
+                    Envoyer la fiche d'heures
+                </a>
+        </div>
+
+
         {% for workDay in workMonth.workDays %}
             <turbo-frame id="work-day-form-frame">
                 <div class="card mb-4">

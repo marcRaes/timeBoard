@@ -34,10 +34,17 @@ class WorkMonth
     #[ORM\OrderBy(['date' => 'ASC'])]
     private Collection $workDays;
 
+    /**
+     * @var Collection<int, WorkReportSubmission>
+     */
+    #[ORM\OneToMany(targetEntity: WorkReportSubmission::class, mappedBy: 'workMonth')]
+    private Collection $workReportSubmissions;
+
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
         $this->workDays = new ArrayCollection();
+        $this->workReportSubmissions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -150,5 +157,35 @@ class WorkMonth
         }
 
         return $count;
+    }
+
+    /**
+     * @return Collection<int, WorkReportSubmission>
+     */
+    public function getWorkReportSubmissions(): Collection
+    {
+        return $this->workReportSubmissions;
+    }
+
+    public function addWorkReportSubmission(WorkReportSubmission $workReportSubmission): static
+    {
+        if (!$this->workReportSubmissions->contains($workReportSubmission)) {
+            $this->workReportSubmissions->add($workReportSubmission);
+            $workReportSubmission->setWorkMonth($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWorkReportSubmission(WorkReportSubmission $workReportSubmission): static
+    {
+        if ($this->workReportSubmissions->removeElement($workReportSubmission)) {
+            // set the owning side to null (unless already changed)
+            if ($workReportSubmission->getWorkMonth() === $this) {
+                $workReportSubmission->setWorkMonth(null);
+            }
+        }
+
+        return $this;
     }
 }
