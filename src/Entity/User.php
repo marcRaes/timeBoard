@@ -12,7 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['email'], message: 'Il existe déjà un compte avec cet email')]
+#[UniqueEntity(fields: ['lastName', 'firstName'], message: 'Un utilisateur portant le même nom et prénom existe déjà.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -92,7 +93,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
@@ -127,10 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @see UserInterface
      */
     public function eraseCredentials(): void
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
+    {}
 
     public function getFirstName(): ?string
     {
@@ -201,7 +198,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeWorkMonth(WorkMonth $workMonth): static
     {
         if ($this->workMonths->removeElement($workMonth)) {
-            // set the owning side to null (unless already changed)
             if ($workMonth->getUser() === $this) {
                 $workMonth->setUser(null);
             }
