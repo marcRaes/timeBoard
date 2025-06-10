@@ -24,7 +24,7 @@ class LoginController extends AbstractController
             $this->addFlash('danger', $error->getMessage());
         }
 
-        return $this->render('login/login.html.twig', [
+        return $this->render('security/login.html.twig', [
             'last_username' => $lastUsername,
             'error' => $error,
         ]);

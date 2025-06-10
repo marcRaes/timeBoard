@@ -46,7 +46,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('security/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }
@@ -62,12 +62,14 @@ class RegistrationController extends AbstractController
 
         try {
             $this->emailConfirmationManager->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $e) {
+        } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('error', 'Le lien de confirmation est invalide ou expiré.');
+
             return $this->redirectToRoute('app_login');
         }
 
         $this->addFlash('success', 'Votre adresse email est confirmée et vous êtes maintenant connecté !');
+
         return $this->redirectToRoute('app_home');
     }
 }

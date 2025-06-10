@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -17,6 +18,9 @@ class RegistrationManager
         private readonly EmailVerifier $emailVerifier,
     ) {}
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function register(User $user, string $plainPassword): void
     {
         $user->setPassword($this->userPasswordHasher->hashPassword($user, $plainPassword));
@@ -28,7 +32,7 @@ class RegistrationManager
                 ->from(new Address('contact@marcraes.fr', 'Time Board'))
                 ->to((string) $user->getEmail())
                 ->subject('Veuillez confirmer votre email')
-                ->htmlTemplate('registration/confirmation_email.html.twig')
+                ->htmlTemplate('emails/confirmation_email.html.twig')
         );
     }
 }

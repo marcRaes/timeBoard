@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-lg min-vh-100 d-flex align-items-center justify-content-center bg-light px-3">
+        <div class="col-lg-6 d-flex flex-column justify-content-center align-items-start p-5">
+            <div class="mb-4">
+                <div class="d-flex align-items-center">
+                    <img src="{{ asset('images/logo-timeboard.png') }}" alt="Logo TimeBoard" height="50">
+                    <div class="ms-2">
+                        <div class="fs-1 fw-bold">TimeBoard</div>
+                        <div class="text-muted fst-italic small ms-2">{{ subtitle }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <h1 class="fw-bold h4 mb-1">Connecté·e par nature</h1>
+            <p class="text-muted mb-4">Gestion intuitive des journées de travail</p>
+
+            {% block form %}{% endblock %}
+        </div>
+
+        <div class="col-lg-6 align-items-center justify-content-center illustration p-4">
+            <img src="{{ asset('images/illustration-agents.png') }}"
+                 alt="Illustration agents municipaux"
+                 class="img-fluid">
+        </div>
+    </div>
+
+    {% block form_footer %}{% endblock %}
+{% endblock %}

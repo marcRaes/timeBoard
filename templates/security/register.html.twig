@@ -1,0 +1,91 @@
+{% set subtitle = 'Créer un compte' %}
+{% extends 'security/layout.html.twig' %}
+
+{% block title %}Créer un compte — TimeBoard{% endblock %}
+
+{% block form %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    {{ form_start(registrationForm, { attr: { class: 'w-100', style: 'max-width: 400px;' } }) }}
+
+    {{ form_errors(registrationForm) }}
+
+    <div class="mb-3">
+        {{ form_label(registrationForm.firstName, null, {
+            'label_attr': {
+                'class': 'form-label'
+            }
+        }) }}
+        {{ form_widget(registrationForm.firstName, {
+            'attr': {
+                'class': 'form-control pe-5'
+            }
+        }) }}
+        {{ form_errors(registrationForm.firstName) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(registrationForm.lastName, null, {
+            'label_attr': {
+                'class': 'form-label'
+            }
+        }) }}
+        {{ form_widget(registrationForm.lastName, {
+            'attr': {
+                'class': 'form-control pe-5'
+            }
+        }) }}
+        {{ form_errors(registrationForm.lastName) }}
+    </div>
+
+    <div class="mb-3">
+        {{ form_label(registrationForm.email, null, {
+            'label_attr': {
+                'class': 'form-label'
+            }
+        }) }}
+        {{ form_widget(registrationForm.email, {
+            'attr': {
+                'class': 'form-control pe-5'
+            }
+        }) }}
+        {{ form_errors(registrationForm.email) }}
+    </div>
+
+    <div class="mb-3 form-password-toggle" data-controller="password-toggle">
+        {{ form_label(registrationForm.plainPassword, null, {
+            'label_attr': {
+                'class': 'form-label'
+            }
+        }) }}
+        {{ form_widget(registrationForm.plainPassword, {
+            'attr': {
+                'data-password-toggle-target': 'input',
+                'id': 'password-field',
+                'class': 'form-control pe-5'
+            }
+        }) }}
+        <button type="button"
+                class="password-toggle-btn"
+                data-password-toggle-target="toggleIcon"
+                data-action="click->password-toggle#toggle"
+                aria-label="Afficher ou masquer le mot de passe">
+            <i class="bi bi-eye"></i>
+        </button>
+    </div>
+
+    <div class="d-grid">
+        <button type="submit" class="btn btn-success btn-lg">Créer le compte</button>
+    </div>
+
+    {{ form_end(registrationForm) }}
+
+    {% block form_footer %}
+        <div class="text-center mt-3">
+            <span class="text-muted">Vous avez déjà un compte ?</span>
+            <a href="{{ path('app_login') }}" class="ms-1 fw-semibold">Se connecter</a>
+        </div>
+    {% endblock %}
+{% endblock %}
