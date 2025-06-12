@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Entity\WorkDay;
 use App\Exception\WorkMonthAlreadySentException;
 use App\Form\WorkDayType;
-use App\Service\MonthNameHelper;
 use App\Service\WorkDayManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -52,8 +51,8 @@ final class WorkDayController extends AbstractController
 
                     $this->addFlash('success', 'Journée ajoutée avec succès.');
 
-                    if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
-                        return new Response('<turbo-stream action="replace" target="work-day-form-frame"><template>
+                    if ($request->isXmlHttpRequest() || $request->headers->get('turbo-frame')) {
+                        return new Response('<turbo-stream action="replace" target="work-day-form-new"><template>
                     <script>window.location.reload();</script>
                     </template></turbo-stream>', 200, ['Content-Type' => 'text/vnd.turbo-stream.html']
                         );

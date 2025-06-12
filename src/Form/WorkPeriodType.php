@@ -31,7 +31,7 @@ class WorkPeriodType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('durationDisplay', TextType::class, [
-                'label' => 'Temps de travail',
+                'label' => 'Durée',
                 'mapped' => false,
                 'attr' => [
                     'readonly' => true,

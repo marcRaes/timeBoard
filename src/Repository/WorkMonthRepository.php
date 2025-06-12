@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\WorkMonth;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -16,28 +17,14 @@ class WorkMonthRepository extends ServiceEntityRepository
         parent::__construct($registry, WorkMonth::class);
     }
 
-    //    /**
-    //     * @return WorkMonth[] Returns an array of WorkMonth objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('w.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?WorkMonth
-    //    {
-    //        return $this->createQueryBuilder('w')
-    //            ->andWhere('w.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findAllForUser(User $user): array
+    {
+        return $this->createQueryBuilder('w')
+            ->where('w.user = :user')
+            ->setParameter('user', $user)
+            ->orderBy('w.year', 'DESC')
+            ->addOrderBy('w.month', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

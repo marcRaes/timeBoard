@@ -1,53 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}TimeSheetBoard - Accueil{% endblock %}
+{% block title %}Accueil - TimeBoard{% endblock %}
 
 {% block body %}
-    <div class="container py-4">
-        <h1 class="mb-4">Vos mois de travail</h1>
-
+    <div class="container py-5">
         <div class="mb-4">
-            <turbo-frame id="work-day-form-frame">
-                <a href="{{ path('app_work_day_create') }}" class="btn btn-primary">
-                    Ajouter une journée de travail
+            <turbo-frame id="work-day-form-new">
+                <a href="{{ path('app_work_day_create') }}" class="btn btn-primary-custom w-sm-auto shadow" data-turbo-frame="work-day-form-new">
+                    <i class="bi bi-plus-circle me-1 text-white"></i>
+                    Ajouter une journée
                 </a>
             </turbo-frame>
         </div>
 
-        <div class="row g-4">
-            {% for workMonth in workMonths %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="card shadow-sm">
-                        <div class="card-header bg-primary text-white">
-                            {% set monthDate = (workMonth.year ~ '-' ~ '%02d'|format(workMonth.month) ~ '-01')|date('F') %}
-                            {{ monthDate|trans }} {{ workMonth.year }}
-                        </div>
-                        <div class="card-body">
-                            <p class="mb-1">
-                                <strong>Nombre de journées travaillées :</strong> {{ workMonth.workDays|length }}
-                            </p>
-                            <p class="mb-1">
-                                <strong>Total heures :</strong> {{ workMonth.formattedTotalTime }}
-                            </p>
-                            <p class="mb-3">
-                                <strong>Tickets restaurant :</strong> {{ workMonth.lunchTickets }}
-                            </p>
-                            <div class="d-flex justify-content-between">
-                                <a href="{{ path('app_work_month_show', {'id': workMonth.id}) }}" class="btn btn-outline-secondary btn-sm">
-                                    Voir
-                                </a>
-                                <a href="{{ path('app_timesheet_pdf', {'id': workMonth.id}) }}" class="btn btn-outline-success btn-sm">
-                                    Visualiser PDF
-                                </a>
+        <div class="accordion" id="accordionYears">
+            {% for year, months in workMonthsByYear %}
+                {% set currentYear = (months|first).year ?? "2025" %}
+                <div class="accordion-item mb-3">
+                    <h2 class="accordion-header" id="heading-{{ year }}">
+                        <button class="accordion-button {% if not loop.first %}collapsed{% endif %} fw-semibold" type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#collapse-{{ year }}"
+                                aria-expanded="{{ loop.first ? 'true' : 'false' }}"
+                                aria-controls="collapse-{{ year }}">
+                            {{ year }}
+                        </button>
+                    </h2>
+                    <div id="collapse-{{ year }}"
+                         class="accordion-collapse collapse {% if loop.first %}show{% endif %}"
+                         aria-labelledby="heading-{{ year }}"
+                         data-bs-parent="#accordionYears"
+                    >
+                        <div class="accordion-body">
+                            <div class="row g-4">
+                                {% for month, workMonthSummary in months %}
+                                    {% set workMonth = workMonthSummary.workMonth %}
+                                    {% set monthDate = (workMonth.year ~ '-' ~ '%02d'|format(workMonth.month) ~ '-01')|date('F') %}
+                                    <div class="col-12 col-md-6 col-lg-4">
+                                        <div class="card h-100 shadow border-0 custom-card">
+                                            <div class="card-header text-white fw-bold custom-card-header">
+                                                {{ monthDate|trans|capitalize }}
+                                            </div>
+                                            <div class="card-body">
+                                                <ul class="list-unstyled mb-3">
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-calendar3 me-2 text-primary-custom"></i>
+                                                        <strong>Jour(s) travaillé(s) :</strong> {{ workMonth.workDays|length }}
+                                                    </li>
+                                                    <li class="mb-2">
+                                                        <i class="bi bi-clock me-2 text-primary-custom"></i>
+                                                        <strong>Total heures :</strong> {{ workMonth.formattedTotalTime }}
+                                                    </li>
+                                                    <li>
+                                                        <i class="bi bi-ticket-perforated me-2 text-primary-custom"></i>
+                                                        <strong>Ticket(s) restaurant :</strong> {{ workMonth.lunchTickets }}
+                                                    </li>
+                                                </ul>
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <a href="{{ path('app_work_month_show', {id: workMonth.id}) }}" class="btn shadow btn-sm btn-outline-secondary-custom">
+                                                        Voir
+                                                    </a>
+                                                    <a href="{{ path('app_timesheet_pdf', {id: workMonth.id}) }}" class="btn shadow btn-sm btn-success-custom">
+                                                        Visualiser PDF
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
+
                         </div>
                     </div>
                 </div>
             {% else %}
                 <div class="col-12">
-                    <div class="alert alert-info text-center">
-                        Aucune feuille de temps enregistrée.
-                    </div>
+                    <p class="text-muted">Vous n'avez enregistré aucun rapport.</p>
                 </div>
             {% endfor %}
         </div>

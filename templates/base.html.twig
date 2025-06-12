@@ -12,6 +12,15 @@
         {% endblock %}
     </head>
     <body class="bg-light">
+        {% block header %}
+            <header class="d-flex justify-content-between align-items-center px-4 py-3 border-bottom">
+                <a href="{{ path('app_home') }}" class="d-flex align-items-center text-decoration-none text-dark gap-2">
+                    <img src="{{ asset('images/logo-timeboard.png') }}" alt="Logo TimeBoard" height="40">
+                    <span class="fs-3 fw-bold">TimeBoard</span>
+                </a>
+            </header>
+        {% endblock %}
+
         {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="alert alert-{{ label }} alert-dismissible fade show text-center" role="alert">

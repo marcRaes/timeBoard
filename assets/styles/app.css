@@ -1,3 +1,12 @@
+html, body {
+    min-width: 320px;
+    overflow-x: auto;
+}
+body {
+    background-color: #FAFAF4;
+}
+
+/* Formulaire de connexion */
 .form-password-toggle {
     position: relative;
 }
@@ -19,13 +28,101 @@
     padding: 0;
     color: #6c757d;
 }
-
 .illustration {
     display: flex;
 }
 .illustration img {
     max-width: 600px;
     height: auto;
+}
+
+/* Couleurs personnalisées */
+.text-primary-custom {
+    color: #357ABD;
+}
+.btn-edit {
+    background-color: #357ABD;
+    color: #F4F9F4;
+}
+.btn-edit:hover {
+    background-color: #063b6e;
+    color: #F4F9F4;
+}
+.bg-primary-custom {
+    background-color: #399355;
+    color: #F4F9F4;
+}
+
+/* Bouton principal */
+.btn-primary-custom {
+    background-color: #399355;
+    border-color: #399355;
+    color: #fff;
+    border-radius: 8px;
+}
+
+.btn-primary-custom:hover {
+    background-color: #2f7a46;
+    border-color: #2f7a46;
+    color: #fff;
+}
+
+/* Header des cartes */
+.custom-card-header {
+    background-color: #357ABD;
+    color: #333;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+}
+
+/* Carte arrondie et ombre plus douce */
+.custom-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+    background-color: #fff;
+}
+
+/* Bouton Voir */
+.btn-outline-secondary-custom {
+    border: 1px solid #265e8f;
+    color: #F4F9F4;
+    background-color: #357ABD;
+}
+
+.btn-outline-secondary-custom:hover {
+    background-color: #043360;
+    color: #F4F9F4;
+}
+
+/* Bouton Visualiser PDF */
+.btn-success-custom {
+    background-color: #399355;
+    border-color: #399355;
+    color: #fff;
+}
+
+.btn-success-custom:hover {
+    background-color: #2f7a46;
+    border-color: #2f7a46;
+    color: #F4F9F4;
+}
+
+/* Accordion header (année) */
+.accordion-button:not(.collapsed) {
+    background-color: #399355;
+    color: #fff;
+    border-radius: 8px !important;
+    font-weight: 600;
+}
+
+.accordion-button:not(.collapsed)::after,
+.accordion-button:not(.collapsed):hover::after {
+    filter: invert(1) grayscale(1) brightness(2);
+}
+
+/* input date */
+.input-form-date {
+    max-width: 30%;
 }
 
 @media (max-width: 991px) {
@@ -41,5 +138,15 @@
 @media (max-width: 768px) {
     .illustration {
         display: none;
+    }
+
+    .input-form-date {
+        max-width: 50%;
+    }
+}
+
+@media (max-width: 576px) {
+    .input-form-date {
+        max-width: 100%;
     }
 }
