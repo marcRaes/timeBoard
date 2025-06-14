@@ -4,6 +4,16 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Welcome!{% endblock %}</title>
+        {# FAVICONS #}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
+        <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
+        <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
+        {# SEO & SOCIAL PREVIEWS #}
+        <meta property="og:title" content="TimeBoard - Gestion de vos heures de travail">
+        <meta property="og:description" content="Application TimeBoard pour la gestion de vos fiches d'heures et rapports de travail.">
+        <meta property="og:image" content="{{ absolute_url(asset('favicon/android-chrome-512x512.png')) }}">
+        <meta name="twitter:card" content="summary_large_image">
         {% block stylesheets %}
         {% endblock %}
 
