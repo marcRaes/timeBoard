@@ -1,89 +1,123 @@
 {% extends 'base.html.twig' %}
 
 {% set monthDate = (workMonth.year ~ '-' ~ '%02d'|format(workMonth.month) ~ '-01')|date('F') %}
-{% block title %}Mois de travail : {{ monthDate|trans }} {{ workMonth.year }}{% endblock %}
+{% block title %}Récapitulatif {{ monthDate|trans|capitalize }} {{ workMonth.year }} - TimeBoard{% endblock %}
 
 {% block body %}
-    <div class="container my-4">
-        <h1 class="mb-4">Mois de travail : {{ monthDate|trans }} {{ workMonth.year }}</h1>
-
-        {% if workMonth.isSent %}
-            <div class="alert alert-success">
-                Rapport envoyé le <strong>{{ workMonth.getWorkReportSubmissions[0].getSentOn()|date('d/m/Y à H:i') }}</strong>
-            </div>
-        {% else %}
-            <div class="mb-4">
-                <turbo-frame id="work-report-form-frame">
-                    <a href="{{ path('app_work_report_submit', { 'id': workMonth.id }) }}" class="btn btn-primary">
-                        Envoyer la fiche d'heures
-                    </a>
-                </turbo-frame>
-            </div>
-        {% endif %}
-
-        <p>Nombre de journées travaillées : {{ workMonth.workDays|length }}</p>
-        <p>Total heures : {{ workMonth.formattedTotalTime }}</p>
-        <p>Tickets restaurant : {{ workMonth.lunchTickets }}</p>
-
-        {% for workDay in workMonth.workDays %}
-            <turbo-frame id="work-day-form-frame">
-                <div class="card mb-4">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <strong>Journée du {{ workDay.date|date('d/m/Y') }}</strong>
-                        {% if not workMonth.isSent %}
-                        <div>
-                            <a href="{{ path('app_work_day_update', { id: workDay.id }) }}" class="btn btn-sm btn-primary">✏️ Modifier</a>
-                            <form method="post" action="{{ path('app_work_day_delete', { id: workDay.id }) }}" class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workDay.id) }}">
-                                <button class="btn btn-sm btn-danger">🗑️ Supprimer</button>
-                            </form>
+    <div data-controller="work-report-modal">
+        <div class="container my-4">
+            <div class="mb-5">
+                <h4 class="mb-3 d-none d-md-block">Récapitulatif {{ monthDate|trans|capitalize }} {{ workMonth.year }}</h4>
+                <div class="row g-3 d-none d-md-flex">
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <i class="bi bi-calendar3 fs-2 text-warning"></i>
+                                <div>
+                                    <div class="fs-4 fw-bold">{{ workMonth.workDays|length }}</div>
+                                    <div class="text-muted">Jours travaillés</div>
+                                </div>
+                            </div>
                         </div>
-                        {% endif %}
                     </div>
-
-                    <div class="card-body p-0">
-                        <table class="table table-sm mb-0 table-striped">
-                            <thead class="table-light">
-                            <tr>
-                                <th>Début</th>
-                                <th>Fin</th>
-                                <th>Durée</th>
-                                <th>Lieu</th>
-                                <th>Agent remplacé</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for period in workDay.workPeriods %}
-                                <tr>
-                                    <td>{{ period.timeStart ? period.timeStart|date('H:i') : '-' }}</td>
-                                    <td>{{ period.timeEnd ? period.timeEnd|date('H:i') : '-' }}</td>
-                                    <td>{{ period.duration ? period.duration|calculate_work_duration : '-' }}</td>
-                                    <td>{{ period.location ?: '-' }}</td>
-                                    <td>{{ period.replacedAgent ?: '-' }}</td>
-                                </tr>
-                            {% else %}
-                                <tr>
-                                    <td colspan="7" class="text-center text-muted">Aucune période renseignée.</td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <i class="bi bi-clock fs-2 text-warning"></i>
+                                <div>
+                                    <div class="fs-4 fw-bold">{{ workMonth.formattedTotalTime }}</div>
+                                    <div class="text-muted">Heures totales</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-
-                    <div class="card-footer">
-                        Ticket restaurant :
-                        {% if workDay.hasLunchTicket %}
-                            <span class="badge bg-success">Oui</span>
-                        {% else %}
-                            <span class="badge bg-secondary">Non</span>
-                        {% endif %}
+                    <div class="col-md-4">
+                        <div class="card shadow-sm">
+                            <div class="card-body d-flex align-items-center gap-3">
+                                <i class="bi bi-ticket-perforated fs-2 text-warning"></i>
+                                <div>
+                                    <div class="fs-4 fw-bold">{{ workMonth.lunchTickets }}</div>
+                                    <div class="text-muted">Tickets restaurant</div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </turbo-frame>
-        {% else %}
-            <div class="alert alert-info">Aucune journée enregistrée pour ce mois.</div>
-        {% endfor %}
 
-        <a href="{{ path('app_home') }}" class="btn btn-link mt-3">← Retour à l’accueil</a>
+                <div class="d-block d-md-none mb-4">
+                    <div class="accordion" id="recapAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="headingOne">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
+                                    Récapitulatif {{ monthDate|trans|capitalize }} {{ workMonth.year }}
+                                </button>
+                            </h2>
+                            <div id="collapseOne" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <i class="bi bi-calendar-check text-warning me-2"></i>
+                                            <strong>{{ workMonth.workDays|length }}</strong> jours travaillés
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="bi bi-clock-history text-warning me-2"></i>
+                                            <strong>{{ workMonth.formattedTotalTime }}</strong> heures totales
+                                        </li>
+                                        <li>
+                                            <i class="bi bi-ticket-perforated text-warning me-2"></i>
+                                            <strong>{{ workMonth.lunchTickets }}</strong> tickets restaurant
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    {% if not workMonth.isSent %}
+                        <a href="{{ path('app_work_report_submit', { 'id': workMonth.id }) }}"
+                           class="btn btn-success btn-lg"
+                           data-bs-toggle="modal"
+                           data-bs-target="#work-report-modal"
+                           data-turbo-frame="work-report-form-frame"
+                           data-action="click->work-report-modal#load"
+                        >
+                            <i class="bi bi-send"></i>
+                            Envoyer la fiche d’heures
+                        </a>
+                    {% else %}
+                        <div class="alert alert-success d-inline-block">
+                            <i class="bi bi-send-check-fill"></i>
+                            Rapport envoyé le <strong>{{ workMonth.getWorkReportSubmissions[0].getSentOn()|date('d/m/Y à H:i') }}</strong>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% for workDay in workMonth.workDays %}
+                {% include 'work_day/_card.html.twig' with { workDay: workDay, workMonth: workMonth } %}
+            {% else %}
+                <div class="alert alert-info">Aucune journée enregistrée pour ce mois.</div>
+            {% endfor %}
+
+            <a href="{{ path('app_home') }}" class="btn btn-link mt-3 text-decoration-none">
+                <i class="bi bi-arrow-left"></i> Retour à l’accueil
+            </a>
+        </div>
+
+        <div class="modal fade" id="work-report-modal" tabindex="-1" aria-labelledby="work-report-modal-label" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <turbo-frame id="work-report-form-frame">
+                        <div class="modal-body text-center p-4">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </turbo-frame>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

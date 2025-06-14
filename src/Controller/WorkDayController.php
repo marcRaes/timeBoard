@@ -93,6 +93,13 @@ final class WorkDayController extends AbstractController
 
                 $this->addFlash('success', 'Journée modifiée avec succès.');
 
+                if ($request->isXmlHttpRequest() || $request->headers->get('turbo-frame')) {
+                    return new Response('<turbo-stream action="replace" target="work-day-form-' . $workDay->getId() . '"><template>
+                    <script>window.location.reload();</script>
+                    </template></turbo-stream>', 200, ['Content-Type' => 'text/vnd.turbo-stream.html']
+                    );
+                }
+
                 return $this->redirectToRoute('work_day_show', [
                     'id' => $workMonth->getId(),
                 ]);
@@ -107,6 +114,17 @@ final class WorkDayController extends AbstractController
             'workDayForm' => $form,
             'workDay' => $workDay,
             'isNew' => false,
+        ]);
+    }
+
+    #[Route('/partial/{id}', name: 'app_work_day_partial', methods: ['GET'])]
+    public function partial(WorkDay $workDay): Response
+    {
+        $workMonth = $workDay->getWorkMonth();
+
+        return $this->render('work_day/_card.html.twig', [
+            'workDay' => $workDay,
+            'workMonth' => $workMonth,
         ]);
     }
 

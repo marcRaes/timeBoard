@@ -1,0 +1,58 @@
+{% set frameId = workDay.id %}
+<turbo-frame id="work-day-form-{{ workDay.id }}">
+    <div class="card shadow mb-4">
+        <div class="card-header bg-primary-custom d-flex justify-content-between align-items-center card-header-show-workday">
+            <h6 class="mb-0">
+                <i class="bi bi-calendar-event"></i>
+                Journée du {{ workDay.date|date('d/m/Y') }}
+            </h6>
+
+            {% if not workMonth.isSent %}
+                <div class="d-flex gap-2">
+                    <a href="{{ path('app_work_day_update', { id: workDay.id }) }}"
+                       class="btn btn-sm shadow btn-edit"
+                       data-turbo-frame="work-day-form-{{ workDay.id }}"
+                    >
+                        <i class="bi bi-pencil me-2"></i>Modifier
+                    </a>
+
+                    <form method="post" action="{{ path('app_work_day_delete', { id: workDay.id }) }}"
+                          class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workDay.id) }}">
+                        <button class="btn btn-sm btn-danger"><i class="bi bi-trash me-2"></i>Supprimer</button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card-body py-1">
+            {% for period in workDay.workPeriods %}
+                <div class="py-2 {% if not loop.last %}border-bottom{% endif %}">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-1">
+                        <div class="fw-bold">
+                            <i class="bi bi-clock"></i>
+                            {{ period.timeStart ? period.timeStart|date('H:i') : '-' }} → {{ period.timeEnd ? period.timeEnd|date('H:i') : '-' }}
+                        </div>
+                        <div class="text-muted">
+                            Durée : {{ period.duration ? period.duration|calculate_work_duration : '-' }}
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4 text-muted small">
+                        <span><i class="bi bi-geo-alt"></i> {{ period.location ?: 'N/A' }}</span>
+                        <span><i class="bi bi-person"></i> Rempl. : {{ period.replacedAgent ?: 'N/A' }}</span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center text-muted p-3">Aucune période renseignée.</div>
+            {% endfor %}
+        </div>
+
+        <div class="card-footer bg-light">
+            {% if workDay.hasLunchTicket %}
+                <span class="badge rounded-pill text-bg-success"><i class="bi bi-check-circle"></i> Ticket restaurant</span>
+            {% else %}
+                <span class="badge rounded-pill text-bg-secondary"><i class="bi bi-x-circle"></i> Pas de ticket</span>
+            {% endif %}
+        </div>
+    </div>
+</turbo-frame>

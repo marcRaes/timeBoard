@@ -6,7 +6,7 @@ body {
     background-color: #FAFAF4;
 }
 
-/* Formulaire de connexion */
+/* Formulaire de connexion et enregistrement */
 .form-password-toggle {
     position: relative;
 }
@@ -36,10 +36,12 @@ body {
     height: auto;
 }
 
-/* Couleurs personnalisées */
-.text-primary-custom {
+/* Icônes */
+.icons {
     color: #357ABD;
 }
+
+/* Boutton "Modifier" */
 .btn-edit {
     background-color: #357ABD;
     color: #F4F9F4;
@@ -48,60 +50,56 @@ body {
     background-color: #063b6e;
     color: #F4F9F4;
 }
-.bg-primary-custom {
+
+/* Header de la card d'affichage d'un WorkDay */
+.card-header-show-workday {
+    height: 50px;
     background-color: #399355;
     color: #F4F9F4;
 }
 
-/* Bouton principal */
-.btn-primary-custom {
+/* Bouton "Ajouter une journée" */
+.btn-add-day {
     background-color: #399355;
     border-color: #399355;
     color: #fff;
     border-radius: 8px;
 }
-
-.btn-primary-custom:hover {
+.btn-add-day:hover {
     background-color: #2f7a46;
     border-color: #2f7a46;
     color: #fff;
 }
 
-/* Header des cartes */
-.custom-card-header {
+/* Header des cartes récapitulatif du mois */
+.card-header-month-sent {
     background-color: #357ABD;
     color: #333;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
 }
 
-/* Carte arrondie et ombre plus douce */
-.custom-card {
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-    background-color: #fff;
+.card-header-month-unsent {
+    background-color: #E97F02;
+    color: #F4F9F4;
 }
 
-/* Bouton Voir */
-.btn-outline-secondary-custom {
+/* Bouton "Voir" */
+.btn-look {
     border: 1px solid #265e8f;
     color: #F4F9F4;
     background-color: #357ABD;
 }
-
-.btn-outline-secondary-custom:hover {
+.btn-look:hover {
     background-color: #043360;
     color: #F4F9F4;
 }
 
 /* Bouton Visualiser PDF */
-.btn-success-custom {
+.btn-export {
     background-color: #399355;
     border-color: #399355;
     color: #fff;
 }
-
-.btn-success-custom:hover {
+.btn-export:hover {
     background-color: #2f7a46;
     border-color: #2f7a46;
     color: #F4F9F4;
