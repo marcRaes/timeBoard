@@ -1,7 +1,7 @@
 from graphviz import Digraph
 
 # Create a new directed graph
-dot = Digraph(comment="UML - TimeSheetBoard", format="png")
+dot = Digraph(comment="UML - TimeBoard", format="png")
 dot.attr(rankdir="LR", fontsize="12")
 
 # User entity

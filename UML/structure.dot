@@ -1,4 +1,4 @@
-// UML - TimeSheetBoard
+// UML - TimeBoard
 digraph {
 	fontsize=12 rankdir=LR
 	User [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
