@@ -28,6 +28,16 @@
                     <img src="{{ asset('images/logo-timeboard.png') }}" alt="Logo TimeBoard" height="40">
                     <span class="fs-3 fw-bold">TimeBoard</span>
                 </a>
+
+                <div class="dropdown ms-auto">
+                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle text-dark" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle fs-4 me-1"></i>
+                        <span class="small d-none d-sm-inline">{{ app.user.firstName }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li><a class="dropdown-item text-danger" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                    </ul>
+                </div>
             </header>
         {% endblock %}
 
