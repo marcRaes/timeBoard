@@ -33,6 +33,7 @@ class WorkPeriodType extends AbstractType
             ->add('durationDisplay', TextType::class, [
                 'label' => 'Durée',
                 'mapped' => false,
+                'disabled' => true,
                 'attr' => [
                     'readonly' => true,
                 ],

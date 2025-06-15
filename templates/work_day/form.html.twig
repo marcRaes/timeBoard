@@ -10,24 +10,18 @@
 
         <turbo-frame id="work-day-form-{{ frameId }}">
             <div data-controller="work-form">
+                {% form_theme workDayForm 'form/TimeBoardFormTheme.html.twig' %}
                 {{ form_start(workDayForm, {
                     action: isNew ? path('app_work_day_create') : path('app_work_day_update', {'id': workDay.id}),
                 }) }}
-                {{ form_errors(workDayForm) }}
 
                 <div class="card mb-3">
                     <div class="card-header bg-success text-white text-center fw-bold">
                         <span class="badge bg-success fs-6"><i class="bi bi-calendar-event"></i> Nouvelle journée</span>
                     </div>
+                    {% include 'form/_form_errors.html.twig' with {'form': workDayForm} %}
 
-                    <div class="input-group input-group-sm m-auto input-form-date my-3">
-                        <span class="input-group-text">{{ form_label(workDayForm.date) }}</span>
-                        {{ form_widget(workDayForm.date, {
-                            'attr': {
-                                'class': 'form-control',
-                            }
-                        }) }}
-                    </div>
+                    {{ form_row(workDayForm.date) }}
 
                     <div data-work-form-target="container">
                         <div class="card mx-3">
@@ -39,39 +33,24 @@
                                         </div>
                                         <div class="row g-3 mb-3">
                                             <div class="col-12 col-md-4">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">{{ form_label(workPeriodForm.timeStart) }}</span>
-                                                    {{ form_widget(workPeriodForm.timeStart, { 'attr': { 'class': 'form-control' } }) }}
-                                                </div>
+                                                {{ form_row(workPeriodForm.timeStart) }}
                                             </div>
 
                                             <div class="col-12 col-md-4">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">{{ form_label(workPeriodForm.timeEnd) }}</span>
-                                                    {{ form_widget(workPeriodForm.timeEnd, { 'attr': { 'class': 'form-control' } }) }}
-                                                </div>
+                                                {{ form_row(workPeriodForm.timeEnd) }}
                                             </div>
 
                                             <div class="col-12 col-md-4">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">{{ form_label(workPeriodForm.durationDisplay) }}</span>
-                                                    {{ form_widget(workPeriodForm.durationDisplay, { 'attr': { 'readonly': true, 'disabled': true, 'class': 'form-control' } }) }}
-                                                </div>
+                                                {{ form_row(workPeriodForm.durationDisplay) }}
                                             </div>
                                         </div>
                                         <div class="row g-3">
                                             <div class="col-12 col-md-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">{{ form_label(workPeriodForm.location) }}</span>
-                                                    {{ form_widget(workPeriodForm.location, { 'attr': { 'class': 'form-control' } }) }}
-                                                </div>
+                                                {{ form_row(workPeriodForm.location) }}
                                             </div>
 
                                             <div class="col-12 col-md-6">
-                                                <div class="input-group">
-                                                    <span class="input-group-text">{{ form_label(workPeriodForm.replacedAgent) }}</span>
-                                                    {{ form_widget(workPeriodForm.replacedAgent, { 'attr': { 'class': 'form-control' } }) }}
-                                                </div>
+                                                {{ form_row(workPeriodForm.replacedAgent) }}
                                             </div>
                                             {{ form_row(workPeriodForm.duration) }}
                                         </div>
@@ -96,40 +75,25 @@
                                 </div>
                                 <div class="row g-3 mb-3">
                                     <div class="col-12 col-md-4">
-                                        <div class="input-group">
-                                            <span class="input-group-text">{{ form_label(workDayForm.workPeriods.vars.prototype.timeStart) | replace({ '__name__': '__name__' }) | raw }}</span>
-                                            {{ form_widget(workDayForm.workPeriods.vars.prototype.timeStart, { 'attr': { 'class': 'form-control' } }) | replace({ '__name__': '__name__' }) | raw }}
-                                        </div>
+                                        {{ form_row(workDayForm.workPeriods.vars.prototype.timeStart) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
 
                                     <div class="col-12 col-md-4">
-                                        <div class="input-group">
-                                            <span class="input-group-text">{{ form_label(workDayForm.workPeriods.vars.prototype.timeEnd) | replace({ '__name__': '__name__' }) | raw }}</span>
-                                            {{ form_widget(workDayForm.workPeriods.vars.prototype.timeEnd, { 'attr': { 'class': 'form-control' } }) | replace({ '__name__': '__name__' }) | raw }}
-                                        </div>
+                                        {{ form_row(workDayForm.workPeriods.vars.prototype.timeEnd) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
 
                                     <div class="col-12 col-md-4">
-                                        <div class="input-group">
-                                            <span class="input-group-text">{{ form_label(workDayForm.workPeriods.vars.prototype.durationDisplay) | replace({ '__name__': '__name__' }) | raw }}</span>
-                                            {{ form_widget(workDayForm.workPeriods.vars.prototype.durationDisplay, { 'attr': { 'readonly': true, 'disabled': true, 'class': 'form-control' } }) | replace({ '__name__': '__name__' }) | raw }}
-                                        </div>
+                                        {{ form_row(workDayForm.workPeriods.vars.prototype.durationDisplay) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
                                 </div>
 
                                 <div class="row g-3">
                                     <div class="col-12 col-md-6">
-                                        <div class="input-group">
-                                            <span class="input-group-text">{{ form_label(workDayForm.workPeriods.vars.prototype.location) | replace({ '__name__': '__name__' }) | raw }}</span>
-                                            {{ form_widget(workDayForm.workPeriods.vars.prototype.location, { 'attr': { 'class': 'form-control' } }) | replace({ '__name__': '__name__' }) | raw }}
-                                        </div>
+                                        {{ form_row(workDayForm.workPeriods.vars.prototype.location) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
 
                                     <div class="col-12 col-md-6">
-                                        <div class="input-group">
-                                            <span class="input-group-text">{{ form_label(workDayForm.workPeriods.vars.prototype.replacedAgent) | replace({ '__name__': '__name__' }) | raw }}</span>
-                                            {{ form_widget(workDayForm.workPeriods.vars.prototype.replacedAgent, { 'attr': { 'class': 'form-control' } }) | replace({ '__name__': '__name__' }) | raw }}
-                                        </div>
+                                        {{ form_row(workDayForm.workPeriods.vars.prototype.replacedAgent) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
                                     {{ form_row(workDayForm.workPeriods.vars.prototype.duration) | replace({ '__name__': '__name__' }) | raw }}
                                 </div>
