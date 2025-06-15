@@ -22,7 +22,7 @@ readonly class ResetPasswordMailer
             ->from('noreply@marcraes.fr')
             ->to($user->getEmail())
             ->subject('Réinitialisation de votre mot de passe')
-            ->htmlTemplate('emails/resetPassword.html.twig')
+            ->htmlTemplate('emails/reset_password.html.twig')
             ->context(['resetUrl' => $resetUrl]);
 
         $this->mailer->send($email);

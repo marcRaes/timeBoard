@@ -10,7 +10,6 @@
 
         <turbo-frame id="work-day-form-{{ frameId }}">
             <div data-controller="work-form">
-                {% form_theme workDayForm 'form/TimeBoardFormTheme.html.twig' %}
                 {{ form_start(workDayForm, {
                     action: isNew ? path('app_work_day_create') : path('app_work_day_update', {'id': workDay.id}),
                 }) }}
