@@ -1,4 +1,5 @@
-{% extends 'base.html.twig' %}
+{% extends 'emails/base_email.html.twig' %}
+
 {% set year = submission.getWorkMonth().getYear() %}
 {% set monthDate = (year ~ '-' ~ '%02d'|format(submission.getWorkMonth().getMonth()) ~ '-01')|date('F') %}
 {% set lastName = submission.getWorkMonth().getUser().getLastName() %}
@@ -6,36 +7,25 @@
 
 {% block title %}
     {% if submission.getAttachmentPath() is not empty %}
-        Fiche heure + justificatif transport {{ monthDate|trans }} {{ year }}
+        Fiche d'heures + justificatif - {{ monthDate|trans }} {{ year }}
     {% else %}
-        Fiche heure {{ monthDate|trans }} {{ year }}
+        Fiche d'heures - {{ monthDate|trans }} {{ year }}
     {% endif %}
 {% endblock %}
 
-{% block stylesheets %}
-    <style>
-        body { font-family: Arial, sans-serif; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    </style>
-{% endblock %}
-
 {% block body %}
-    <div class="container">
-        {% if submission.getAttachmentPath() is not empty %}
-            <h1>Fiche heure + justificatif transport {{ monthDate|trans }} {{ year }}</h1>
+    {% if submission.getAttachmentPath() is not empty %}
+        <h1>Fiche d'heures + justificatif de transport - {{ monthDate|trans }} {{ year }}</h1>
+        <p>Bonjour,</p>
+        <p>Vous trouverez ci-joint ma fiche d'heures ainsi que mon justificatif de transport pour le mois de {{ monthDate|trans }}.</p>
+    {% else %}
+        <h1>Fiche d'heures - {{ monthDate|trans }} {{ year }}</h1>
+        <p>Bonjour,</p>
+        <p>Vous trouverez ci-joint ma fiche d'heures pour le mois de {{ monthDate|trans }}.</p>
+    {% endif %}
 
-            <p>Bonjour,</p>
-            <p>Vous trouverez ci-joint ma fiche d'heure et mon justificatif de transport pour le mois de {{ monthDate|trans }}.</p>
-        {% else %}
-            <h1>Fiche heure {{ monthDate|trans }} {{ year }}</h1>
-
-            <p>Bonjour,</p>
-            <p>Vous trouverez ci-joint ma fiche d'heure pour le mois de {{ monthDate|trans }}.</p>
-        {% endif %}
-
-        <p>
-            Cordialement,<br>
-            {{ firstName }}
-        </p>
-    </div>
+    <p>
+        Cordialement,<br>
+        {{ firstName|capitalize }}
+    </p>
 {% endblock %}
