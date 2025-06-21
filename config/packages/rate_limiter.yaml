@@ -1,0 +1,6 @@
+framework:
+    rate_limiter:
+        email_confirmation_resend:
+            policy: 'sliding_window'
+            limit: 1
+            interval: '15 minutes'

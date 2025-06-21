@@ -16,6 +16,10 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Twig\Environment as Twig;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class LoginAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -23,7 +27,8 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
 
     public function __construct(
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly UserRepository $userRepository
+        private readonly UserRepository $userRepository,
+        private readonly Twig $twig
     ) {}
 
     public function authenticate(Request $request): Passport
@@ -53,8 +58,21 @@ class LoginAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
+    /**
+     * @throws SyntaxError
+     * @throws RuntimeError
+     * @throws LoaderError
+     */
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
+        if ($exception->getMessageKey() === 'email_verification_required') {
+            $html = $this->twig->render('security/_email_confirmation_flash.html.twig', [
+                'email' => $request->request->get('email', ''),
+            ]);
+
+            $request->getSession()->getFlashBag()->add('warning', $html);
+        }
+
         $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
 
         return new RedirectResponse(

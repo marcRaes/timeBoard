@@ -9,6 +9,7 @@ use App\Form\RegistrationForm;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\EmailConfirmationHandler;
+use App\Service\EmailConfirmationSender;
 use App\Service\RegistrationManager;
 use App\Service\ResetPasswordMailer;
 use App\Service\ResetPasswordTokenManager;
@@ -20,6 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -36,6 +38,8 @@ class SecurityController extends AbstractController
         private readonly UserPasswordHasherInterface $passwordHasher,
         private readonly ResetPasswordMailer $resetPasswordMailer,
         private readonly LoggerInterface $logger,
+        private readonly EmailConfirmationSender $emailConfirmationSender,
+        private readonly RateLimiterFactory $emailLimiter
     )
     {}
 
@@ -161,5 +165,40 @@ class SecurityController extends AbstractController
         return $this->render('security/reset_password.html.twig', [
             'form' => $form
         ]);
+    }
+
+    /**
+     * @throws TransportExceptionInterface
+     */
+    #[Route('/resend-confirmation', name: 'app_resend_confirmation', methods: ['POST'])]
+    public function resendConfirmationEmail(Request $request): RedirectResponse
+    {
+        $email = $request->request->get('email');
+
+        if (!$email) {
+            $this->addFlash('danger', 'Adresse email requise.');
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        $limiter = $this->emailLimiter->create($email);
+        $limit = $limiter->consume();
+
+        if (!$limit->isAccepted()) {
+            $this->addFlash('warning', 'Vous avez récemment demandé un renvoi. Merci de patienter quelques minutes.');
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        $user = $this->userRepository->findOneBy(['email' => $email]);
+
+        if ($user && !$user->isVerified()) {
+            $this->emailConfirmationSender->send($user);
+            $this->addFlash('success', 'Un nouvel email de confirmation vous a été envoyé.');
+        } else {
+            $this->addFlash('info', 'Si ce compte existe, un email de confirmation a déjà été envoyé.');
+        }
+
+        return $this->redirectToRoute('app_login');
     }
 }

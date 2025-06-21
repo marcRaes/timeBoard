@@ -3,7 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
-use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 use Symfony\Component\Security\Core\User\{UserCheckerInterface, UserInterface};
 
 class UserChecker implements UserCheckerInterface
@@ -15,9 +15,7 @@ class UserChecker implements UserCheckerInterface
         }
 
         if (! $user->isVerified()) {
-            throw new CustomUserMessageAccountStatusException(
-                'Vous devez confirmer votre adresse email avant de vous connecter.'
-            );
+            throw new CustomUserMessageAuthenticationException('email_verification_required');
         }
     }
 
