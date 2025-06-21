@@ -10,7 +10,7 @@
 
     {{ form_start(registrationForm, { attr: { class: 'w-100', style: 'max-width: 400px;' } }) }}
 
-    {{ form_errors(registrationForm) }}
+    <div class="m-1 text-danger">{{ form_errors(registrationForm) }}</div>
 
     <div class="mb-3">
         {{ form_label(registrationForm.firstName, null, {
@@ -20,10 +20,12 @@
         }) }}
         {{ form_widget(registrationForm.firstName, {
             'attr': {
-                'class': 'form-control pe-5'
+                'class': (registrationForm.firstName.vars.errors|length > 0 ? 'form-control pe-5 is-invalid' : 'form-control pe-5')
             }
         }) }}
-        {{ form_errors(registrationForm.firstName) }}
+        {% for error in registrationForm.firstName.vars.errors %}
+            <div class="invalid-feedback d-block">{{ error.message }}</div>
+        {% endfor %}
     </div>
 
     <div class="mb-3">
@@ -34,10 +36,12 @@
         }) }}
         {{ form_widget(registrationForm.lastName, {
             'attr': {
-                'class': 'form-control pe-5'
+                'class': (registrationForm.lastName.vars.errors|length > 0 ? 'form-control pe-5 is-invalid' : 'form-control pe-5')
             }
         }) }}
-        {{ form_errors(registrationForm.lastName) }}
+        {% for error in registrationForm.lastName.vars.errors %}
+            <div class="invalid-feedback d-block">{{ error.message }}</div>
+        {% endfor %}
     </div>
 
     <div class="mb-3">
@@ -48,32 +52,39 @@
         }) }}
         {{ form_widget(registrationForm.email, {
             'attr': {
-                'class': 'form-control pe-5'
+                'class': (registrationForm.email.vars.errors|length > 0 ? 'form-control pe-5 is-invalid' : 'form-control pe-5')
             }
         }) }}
-        {{ form_errors(registrationForm.email) }}
+        {% for error in registrationForm.email.vars.errors %}
+            <div class="invalid-feedback d-block">{{ error.message }}</div>
+        {% endfor %}
     </div>
 
     <div class="mb-3 form-password-toggle" data-controller="password-toggle">
-        {{ form_label(registrationForm.plainPassword, null, {
+        {{ form_label(registrationForm.password, null, {
             'label_attr': {
                 'class': 'form-label'
             }
         }) }}
-        {{ form_widget(registrationForm.plainPassword, {
-            'attr': {
-                'data-password-toggle-target': 'input',
-                'id': 'password-field',
-                'class': 'form-control pe-5'
-            }
-        }) }}
-        <button type="button"
-                class="password-toggle-btn"
-                data-password-toggle-target="toggleIcon"
-                data-action="click->password-toggle#toggle"
-                aria-label="Afficher ou masquer le mot de passe">
-            <i class="bi bi-eye"></i>
-        </button>
+        <div class="position-relative">
+            {{ form_widget(registrationForm.password, {
+                'attr': {
+                    'data-password-toggle-target': 'input',
+                    'id': 'password-field',
+                    'class': (registrationForm.password.vars.errors|length > 0 ? 'form-control pe-5 is-invalid' : 'form-control pe-5')
+                }
+            }) }}
+            <button type="button"
+                    class="password-toggle-btn"
+                    data-password-toggle-target="toggleIcon"
+                    data-action="click->password-toggle#toggle"
+                    aria-label="Afficher ou masquer le mot de passe">
+                <i class="bi bi-eye"></i>
+            </button>
+        </div>
+        {% for error in registrationForm.password.vars.errors %}
+            <div class="invalid-feedback d-block">{{ error.message }}</div>
+        {% endfor %}
     </div>
 
     <div class="d-grid">

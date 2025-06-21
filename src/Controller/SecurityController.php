@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Dto\PasswordInputDto;
+use App\Dto\RegistrationDto;
 use App\Entity\User;
 use App\Form\RegistrationForm;
+use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\EmailConfirmationManager;
 use App\Service\RegistrationManager;
@@ -30,7 +33,7 @@ class SecurityController extends AbstractController
         private readonly UserRepository $userRepository,
         private readonly ResetPasswordTokenManager $resetPasswordTokenManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly ResetPasswordMailer $resetPasswordMailer,
+        private readonly ResetPasswordMailer $resetPasswordMailer
     )
     {}
 
@@ -64,17 +67,16 @@ class SecurityController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationForm::class, $user);
+        $dto = new RegistrationDto();
+        $form = $this->createForm(RegistrationForm::class, $dto);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $plainPassword = $form->get('plainPassword')->getData();
-
             try {
-                $this->registrationManager->register($user, $plainPassword);
+                $this->registrationManager->register($dto);
             } catch (\Exception $e) {
                 $this->addFlash('error', 'Une erreur est survenue lors de l’inscription.');
+
                 return $this->redirectToRoute('app_register');
             }
 
@@ -140,9 +142,12 @@ class SecurityController extends AbstractController
             return $this->redirectToRoute('app_forgot_password');
         }
 
-        if ($request->isMethod('POST')) {
-            $newPassword = $request->request->get('password');
-            $user->setPassword($this->passwordHasher->hashPassword($user, $newPassword));
+        $dto = new PasswordInputDto();
+        $form = $this->createForm(ResetPasswordType::class, $dto);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user->setPassword($this->passwordHasher->hashPassword($user, $dto->password));
             $this->resetPasswordTokenManager->invalidate($user);
 
             $this->addFlash('success', 'Votre mot de passe a été réinitialisé.');
@@ -151,7 +156,7 @@ class SecurityController extends AbstractController
         }
 
         return $this->render('security/reset_password.html.twig', [
-            'token' => $token
+            'form' => $form
         ]);
     }
 }

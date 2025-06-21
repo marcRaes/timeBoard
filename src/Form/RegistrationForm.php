@@ -2,15 +2,13 @@
 
 namespace App\Form;
 
-use App\Entity\User;
+use App\Dto\RegistrationDto;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationForm extends AbstractType
 {
@@ -26,20 +24,10 @@ class RegistrationForm extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email',
             ])
-            ->add('plainPassword', PasswordType::class, [
+            ->add('password', PasswordType::class, [
                 'label' => 'Mot de passe',
-                'mapped' => false,
+                'property_path' => 'password.password',
                 'attr' => ['autocomplete' => 'new-password'],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Veuillez entrer un mot de passe',
-                    ]),
-                    new Length([
-                        'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères',
-                        'max' => 4096,
-                    ]),
-                ],
             ])
         ;
     }
@@ -47,7 +35,7 @@ class RegistrationForm extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => RegistrationDto::class,
         ]);
     }
 }

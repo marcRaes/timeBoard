@@ -4,7 +4,7 @@
 {% block title %}Connexion — TimeBoard{% endblock %}
 
 {% block form %}
-    <form method="post" class="w-100" style="max-width: 400px;">
+    <form action="{{ path('app_login') }}" method="post" class="w-100" style="max-width: 400px;">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
@@ -17,18 +17,20 @@
 
         <div class="mb-3 form-password-toggle" data-controller="password-toggle">
             <label for="password-field" class="form-label">Mot de passe</label>
-            <input type="password" name="_password" id="password-field"
-                   class="form-control"
-                   autocomplete="current-password"
-                   data-password-toggle-target="input"
-                   required>
-            <button type="button"
-                    class="password-toggle-btn"
-                    data-action="click->password-toggle#toggle"
-                    data-password-toggle-target="toggleIcon"
-                    aria-label="Afficher ou masquer le mot de passe">
-                <i class="bi bi-eye"></i>
-            </button>
+            <div class="position-relative">
+                <input type="password" name="_password" id="password-field"
+                       class="form-control"
+                       autocomplete="current-password"
+                       data-password-toggle-target="input"
+                       required>
+                <button type="button"
+                        class="password-toggle-btn"
+                        data-action="click->password-toggle#toggle"
+                        data-password-toggle-target="toggleIcon"
+                        aria-label="Afficher ou masquer le mot de passe">
+                    <i class="bi bi-eye"></i>
+                </button>
+            </div>
         </div>
 
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">

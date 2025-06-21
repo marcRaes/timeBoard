@@ -19,14 +19,16 @@ body {
     padding-right: 2.5rem;
     height: calc(1.5em + .75rem + 2px);
 }
-.password-toggle-btn {
+.form-password-toggle .password-toggle-btn {
     position: absolute;
     right: 0.75rem;
-    top: 55%;
+    top: 50%;
+    transform: translateY(-50%);
     background: none;
     border: none;
     padding: 0;
     color: #6c757d;
+    z-index: 10;
 }
 .illustration {
     display: flex;
