@@ -10,7 +10,7 @@ class UniqueUserEmailValidator extends ConstraintValidator
 {
     public function __construct(private readonly UserRepository $userRepository) {}
 
-    public function validate($value, Constraint $constraint)
+    public function validate($value, Constraint $constraint): void
     {
         /* @var $constraint UniqueUserEmail */
 

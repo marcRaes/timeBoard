@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\WorkDay;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class WorkDayVoter extends Voter
@@ -16,7 +17,7 @@ class WorkDayVoter extends Voter
         return $attribute === self::DELETE && $subject instanceof WorkDay;
     }
 
-    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         $user = $token->getUser();
 

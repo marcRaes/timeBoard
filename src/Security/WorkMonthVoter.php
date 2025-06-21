@@ -5,6 +5,7 @@ namespace App\Security;
 use App\Entity\User;
 use App\Entity\WorkMonth;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class WorkMonthVoter extends Voter
@@ -16,7 +17,7 @@ class WorkMonthVoter extends Voter
         return $attribute === self::VIEW && $subject instanceof WorkMonth;
     }
 
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token): bool
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token, ?Vote $vote = null): bool
     {
         $user = $token->getUser();
         if (!$user instanceof User) {
