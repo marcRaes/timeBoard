@@ -5,21 +5,17 @@ namespace App\Service;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmailConfirmationManager
+readonly class EmailConfirmationHandler
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly VerifyEmailHelperInterface $verifyEmailHelper,
-        private readonly Security $security,
+        private EntityManagerInterface $entityManager,
+        private VerifyEmailHelperInterface $verifyEmailHelper,
+        private Security $security,
     ) {}
 
-    /**
-     * @throws VerifyEmailExceptionInterface
-     */
     public function handleEmailConfirmation(Request $request, User $user): void
     {
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest(

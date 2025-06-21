@@ -8,11 +8,12 @@ use App\Entity\User;
 use App\Form\RegistrationForm;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
-use App\Service\EmailConfirmationManager;
+use App\Service\EmailConfirmationHandler;
 use App\Service\RegistrationManager;
 use App\Service\ResetPasswordMailer;
 use App\Service\ResetPasswordTokenManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,12 +29,13 @@ class SecurityController extends AbstractController
 {
     public function __construct(
         private readonly RegistrationManager $registrationManager,
-        private readonly EmailConfirmationManager $emailConfirmationManager,
+        private readonly EmailConfirmationHandler $emailConfirmationHandler,
         private readonly EntityManagerInterface $entityManager,
         private readonly UserRepository $userRepository,
         private readonly ResetPasswordTokenManager $resetPasswordTokenManager,
         private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly ResetPasswordMailer $resetPasswordMailer
+        private readonly ResetPasswordMailer $resetPasswordMailer,
+        private readonly LoggerInterface $logger,
     )
     {}
 
@@ -74,6 +76,7 @@ class SecurityController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->registrationManager->register($dto);
+                $this->logger->info('Inscription réussie, email de confirmation envoyé à '.$dto->email);
             } catch (\Exception $e) {
                 $this->addFlash('error', 'Une erreur est survenue lors de l’inscription.');
 
@@ -98,7 +101,7 @@ class SecurityController extends AbstractController
         }
 
         try {
-            $this->emailConfirmationManager->handleEmailConfirmation($request, $user);
+            $this->emailConfirmationHandler->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash('error', 'Le lien de confirmation est invalide ou expiré.');
 
