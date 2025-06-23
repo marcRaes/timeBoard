@@ -8,6 +8,7 @@ use App\Exception\InvalidAttachmentException;
 use App\Exception\PdfGenerationException;
 use App\Exception\SubmissionException;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Service\Export\TimeSheetExporter;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
@@ -65,7 +66,7 @@ readonly class WorkReportMailer
     private function generateTimesheetPdf(WorkMonth $workMonth): string
     {
         try {
-            return $this->timeSheetExporter->create($workMonth);
+            return $this->timeSheetExporter->export($workMonth);
         } catch (\Throwable $exception) {
             $this->logger->error('Erreur lors de la création du PDF : ' . $exception->getMessage(), [
                 'workMonthId' => $workMonth->getId(),

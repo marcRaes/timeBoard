@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\WorkMonth;
-use App\Service\TimeSheetExporter;
+use App\Service\Export\TimeSheetExporter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -16,7 +16,7 @@ final class TimeSheetController extends AbstractController
     #[Route('/timesheet/pdf/{id}', name: 'app_timesheet_pdf')]
     public function timesheet_pdf(WorkMonth $workMonth, TimeSheetExporter $timeSheetExporter): BinaryFileResponse
     {
-        $filePath = $timeSheetExporter->create($workMonth);
+        $filePath = $timeSheetExporter->export($workMonth);
 
         return new BinaryFileResponse( $filePath, 200, [
             'Content-Type' => 'application/pdf',

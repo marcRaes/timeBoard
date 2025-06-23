@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Security;
 
 use App\Entity\User;
-use Symfony\Component\Mime\Address;
+use App\Security\EmailVerifier;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use App\Security\EmailVerifier;
+use Symfony\Component\Mime\Address;
 
-readonly class EmailConfirmationSender
+readonly class EmailConfirmationMailer
 {
     public function __construct(
         private EmailVerifier $emailVerifier

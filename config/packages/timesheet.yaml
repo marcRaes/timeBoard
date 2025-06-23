@@ -1,6 +1,0 @@
-parameters:
-    template_path: '%kernel.project_dir%/assets/templates/excel/FicheHeure.xlsx'
-    pdf_path: '%kernel.project_dir%/var/export/'
-    img_path: '%kernel.project_dir%/assets/images/timesheet/'
-    logo_filename: 'Logo_Villefontaine2011.png'
-    signature_filename: 'Signature.png'
