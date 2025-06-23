@@ -4,6 +4,11 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    template_path: '%kernel.project_dir%/assets/templates/excel/FicheHeure.xlsx'
+    pdf_path: '%kernel.project_dir%/var/export/'
+    img_path: '%kernel.project_dir%/assets/images/timesheet/'
+    logo_filename: 'Logo_Villefontaine2011.png'
+    signature_filename: 'Signature.png'
 
 services:
     # default configuration for services in *this* file
@@ -20,7 +25,7 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
-    App\Service\TimeSheetExporter:
+    App\Config\TimeSheetConfig:
         arguments:
             $templatePath: '%template_path%'
             $pdfPath: '%pdf_path%'
@@ -28,7 +33,14 @@ services:
             $logoFilename: '%logo_filename%'
             $signatureFilename: '%signature_filename%'
 
-    App\Controller\SecurityController:
+    App\Service\Export\TimeSheetBuilder:
+        arguments:
+            $sections:
+                - '@App\Service\Export\Section\HeaderSection'
+                - '@App\Service\Export\Section\LinesSection'
+                - '@App\Service\Export\Section\FooterSection'
+
+    App\Service\Security\ResendEmailConfirmationHandler:
         arguments:
             $emailLimiter: '@limiter.email_confirmation_resend'
 

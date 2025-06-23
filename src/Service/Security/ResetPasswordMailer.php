@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Security;
 
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -14,6 +15,9 @@ readonly class ResetPasswordMailer
         private UrlGeneratorInterface $urlGenerator
     ) {}
 
+    /**
+     * @throws TransportExceptionInterface
+     */
     public function sendResetEmail(User $user, string $token): void
     {
         $resetUrl = $this->urlGenerator->generate('app_reset_password', ['token' => $token], UrlGeneratorInterface::ABSOLUTE_URL);

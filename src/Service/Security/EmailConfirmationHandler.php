@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Security;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
-use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use Symfony\Component\HttpFoundation\Request;
+use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 readonly class EmailConfirmationHandler
 {

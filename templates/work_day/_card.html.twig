@@ -17,7 +17,7 @@
                     </a>
 
                     <form method="post" action="{{ path('app_work_day_delete', { id: workDay.id }) }}"
-                          class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');">
+                          class="d-inline" onsubmit="return confirm('Supprimer cette journée ?');" data-turbo-frame="_top">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ workDay.id) }}">
                         <button class="btn btn-sm btn-danger"><i class="bi bi-trash me-2"></i>Supprimer</button>
                     </form>
