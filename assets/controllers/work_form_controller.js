@@ -96,6 +96,9 @@ export default class extends Controller {
         const entry = event.target.closest('.work-form-entry');
         if (!entry) return;
 
+        const entries = Array.from(this.workFormEntryTargets);
+        const index = entries.indexOf(entry);
+
         const timeStartInput = entry.querySelector('input[name$="[timeStart]"]');
         const timeEndInput = entry.querySelector('input[name$="[timeEnd]"]');
         const durationDisplayInput = entry.querySelector('input[name$="[durationDisplay]"]');
@@ -130,7 +133,21 @@ export default class extends Controller {
             if (timeError) timeError.classList.add('d-none');
 
             let duration = end - start;
-            if (endHours >= 11) {
+
+            // Règle 1 : Déduire 30 min si début < 11h
+            const isBefore11 = startHours < 11 && endHours >= 11;
+            // Règle 2 : Pas de pause si l'heure de début = fin précédente
+            let sameAsPreviousEnd = false;
+
+            if (index > 0) {
+                const previousEntry = entries[index - 1];
+                const prevEndInput = previousEntry.querySelector('input[name$="[timeEnd]"]');
+                if (prevEndInput && prevEndInput.value === timeStartInput.value) {
+                    sameAsPreviousEnd = true;
+                }
+            }
+
+            if (isBefore11 && !sameAsPreviousEnd) {
                 duration -= 30;
             }
             if (duration < 0) duration = 0;
