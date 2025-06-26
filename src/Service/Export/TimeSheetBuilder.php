@@ -17,7 +17,8 @@ readonly class TimeSheetBuilder
     public function __construct(
         private iterable $sections,
         private TimeSheetConfig $timeSheetConfig,
-        private SheetContext $sheetContext
+        private SheetContext $sheetContext,
+        private TimeSheetConfigurator $timeSheetConfigurator
     ) {}
 
     public function build(WorkMonth $workMonth): Spreadsheet
@@ -28,6 +29,8 @@ readonly class TimeSheetBuilder
         foreach ($this->sections as $section) {
             $section->apply($sheet, $workMonth, $this->sheetContext);
         }
+
+        $this->timeSheetConfigurator->configure($sheet);
 
         return $spreadsheet;
     }
