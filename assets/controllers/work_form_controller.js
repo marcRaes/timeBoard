@@ -137,17 +137,18 @@ export default class extends Controller {
             // Règle 1 : Déduire 30 min si début < 11h
             const isBefore11 = startHours < 11 && endHours >= 11;
             // Règle 2 : Pas de pause si l'heure de début = fin précédente
-            let sameAsPreviousEnd = false;
+            /*let sameAsPreviousEnd = false;
 
             if (index > 0) {
                 const previousEntry = entries[index - 1];
                 const prevEndInput = previousEntry.querySelector('input[name$="[timeEnd]"]');
+                console.log(prevEndInput, prevEndInput.value, timeStartInput.value);
                 if (prevEndInput && prevEndInput.value === timeStartInput.value) {
                     sameAsPreviousEnd = true;
                 }
-            }
+            }*/
 
-            if (isBefore11 && !sameAsPreviousEnd) {
+            if (isBefore11) {
                 duration -= 30;
             }
             if (duration < 0) duration = 0;
