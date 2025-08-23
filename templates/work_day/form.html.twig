@@ -31,16 +31,20 @@
                                             L'heure de début doit être inférieure à l'heure de fin.
                                         </div>
                                         <div class="row g-3 mb-3">
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-3">
                                                 {{ form_row(workPeriodForm.timeStart) }}
                                             </div>
 
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-3">
                                                 {{ form_row(workPeriodForm.timeEnd) }}
                                             </div>
 
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-2">
                                                 {{ form_row(workPeriodForm.durationDisplay) }}
+                                            </div>
+
+                                            <div class="col-12 col-md-4">
+                                                {{ form_row(workPeriodForm.type) }}
                                             </div>
                                         </div>
                                         <div class="row g-3">
@@ -73,16 +77,20 @@
                                     L'heure de début doit être inférieure à l'heure de fin.
                                 </div>
                                 <div class="row g-3 mb-3">
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-3">
                                         {{ form_row(workDayForm.workPeriods.vars.prototype.timeStart) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
 
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-3">
                                         {{ form_row(workDayForm.workPeriods.vars.prototype.timeEnd) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
 
-                                    <div class="col-12 col-md-4">
+                                    <div class="col-12 col-md-2">
                                         {{ form_row(workDayForm.workPeriods.vars.prototype.durationDisplay) | replace({ '__name__': '__name__' }) | raw }}
+                                    </div>
+
+                                    <div class="col-12 col-md-4">
+                                        {{ form_row(workDayForm.workPeriods.vars.prototype.type) | replace({ '__name__': '__name__' }) | raw }}
                                     </div>
                                 </div>
 

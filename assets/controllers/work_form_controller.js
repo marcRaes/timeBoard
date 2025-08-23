@@ -15,11 +15,11 @@ export default class extends Controller {
 
     initialize() {
         this.containerTarget.addEventListener('change', (event) => {
-            if (event.target.matches('input[name$="[timeStart]"], input[name$="[timeEnd]"]')) {
+            if (event.target.matches('input[name$="[timeStart]"], input[name$="[timeEnd]"], select[name$="[type]"]')) {
                 this.handleTimeChange(event);
             }
 
-            if (event.target.matches('input[name$="[location]"]')) {
+            if (event.target.matches('input[name$="[location]"], select[name$="[type]"]')) {
                 this.validateForm();
             }
         });
@@ -101,6 +101,7 @@ export default class extends Controller {
 
         const timeStartInput = entry.querySelector('input[name$="[timeStart]"]');
         const timeEndInput = entry.querySelector('input[name$="[timeEnd]"]');
+        const typeSelect = entry.querySelector('select[name$="[type]"]');
         const durationDisplayInput = entry.querySelector('input[name$="[durationDisplay]"]');
         const durationInput = entry.querySelector('input[name$="[duration]"]');
         const timeError = entry.querySelector('[data-error-target="timeError"]');
@@ -134,21 +135,13 @@ export default class extends Controller {
 
             let duration = end - start;
 
-            // Règle 1 : Déduire 30 min si début < 11h
+            // Règle 1 : Déduire 30 min si début < 11h et fin >= 11h
             const isBefore11 = startHours < 11 && endHours >= 11;
-            // Règle 2 : Pas de pause si l'heure de début = fin précédente
-            /*let sameAsPreviousEnd = false;
+            // Règle 2 : Pas de déduction des 30 min si le type est réunion/formation
+            const typeValue = (typeSelect?.value || 'work');
+            const isMeetingOrTraining = (typeValue === 'meeting_training');
 
-            if (index > 0) {
-                const previousEntry = entries[index - 1];
-                const prevEndInput = previousEntry.querySelector('input[name$="[timeEnd]"]');
-                console.log(prevEndInput, prevEndInput.value, timeStartInput.value);
-                if (prevEndInput && prevEndInput.value === timeStartInput.value) {
-                    sameAsPreviousEnd = true;
-                }
-            }*/
-
-            if (isBefore11) {
+            if (isBefore11 && !isMeetingOrTraining) {
                 duration -= 30;
             }
             if (duration < 0) duration = 0;

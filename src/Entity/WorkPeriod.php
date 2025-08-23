@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\WorkPeriodType;
 use App\Repository\WorkPeriodRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -32,6 +33,9 @@ class WorkPeriod
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $replacedAgent = null;
+
+    #[ORM\Column(type: 'string', length: 32, enumType: WorkPeriodType::class)]
+    private WorkPeriodType $type = WorkPeriodType::Work;
 
     public function getId(): ?int
     {
@@ -106,6 +110,18 @@ class WorkPeriod
     public function setReplacedAgent(?string $replacedAgent): static
     {
         $this->replacedAgent = $replacedAgent;
+
+        return $this;
+    }
+
+    public function getType(): WorkPeriodType
+    {
+        return $this->type;
+    }
+
+    public function setType(WorkPeriodType $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }
