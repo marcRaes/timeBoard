@@ -46,6 +46,7 @@ dot.node('WorkPeriod', '''<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 <TR><TD>+ duration : int</TD></TR>
 <TR><TD>+ location : string</TD></TR>
 <TR><TD>+ replacedAgent : string&#124;null</TD></TR>
+<TR><TD>+ type : string</TD></TR>
 </TABLE>>''')
 
 # WorkReportSubmission entity (avec échappement de | en &#124; et sans quotes dans le default)

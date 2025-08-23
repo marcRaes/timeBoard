@@ -36,6 +36,7 @@ digraph {
 <TR><TD>+ duration : int</TD></TR>
 <TR><TD>+ location : string</TD></TR>
 <TR><TD>+ replacedAgent : string&#124;null</TD></TR>
+<TR><TD>+ type : string</TD></TR>
 </TABLE>>]
 	WorkReportSubmission [label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">
 <TR><TD COLSPAN="2"><B>WorkReportSubmission</B></TD></TR>
