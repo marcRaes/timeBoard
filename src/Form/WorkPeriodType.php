@@ -54,7 +54,6 @@ class WorkPeriodType extends AbstractType
                     '🛠️ Travail' => WorkPeriodEnum::Work,
                     '🎓 Réunion / Formation' => WorkPeriodEnum::MeetingTraining,
                 ],
-                'data' => WorkPeriodEnum::Work,
                 'required' => true,
                 'placeholder' => false,
                 'choice_translation_domain' => false,
