@@ -5,14 +5,14 @@ namespace App\Service\Security;
 use App\Dto\ResendEmailConfirmationResultDto;
 use App\Repository\UserRepository;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
-use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
 
 readonly class ResendEmailConfirmationHandler
 {
     public function __construct(
         private UserRepository $userRepository,
         private EmailConfirmationMailer $emailConfirmationMailer,
-        private RateLimiterFactory $emailLimiter
+        private RateLimiterFactoryInterface $emailLimiter
     ) {}
 
     /**

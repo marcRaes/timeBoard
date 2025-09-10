@@ -14,8 +14,7 @@ readonly class EmailVerifier
 {
     public function __construct(
         private VerifyEmailHelperInterface $verifyEmailHelper,
-        private MailerInterface $mailer,
-        private EntityManagerInterface $entityManager
+        private MailerInterface $mailer
     ) {
     }
 
@@ -42,15 +41,5 @@ readonly class EmailVerifier
         $email->context($context);
 
         $this->mailer->send($email);
-    }
-
-    public function handleEmailConfirmation(Request $request, User $user): void
-    {
-        $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), (string) $user->getEmail());
-
-        $user->setIsVerified(true);
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
     }
 }

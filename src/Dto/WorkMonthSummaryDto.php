@@ -4,11 +4,11 @@ namespace App\Dto;
 
 use App\Entity\WorkMonth;
 
-final class WorkMonthSummaryDto
+final readonly class WorkMonthSummaryDto
 {
     public function __construct(
-        public readonly int $year,
-        public readonly int $month,
-        public readonly WorkMonth $workMonth
+        public int $year,
+        public int $month,
+        public WorkMonth $workMonth
     ) {}
 }

@@ -29,6 +29,11 @@ final class WorkMonthGrouper
             );
         }
 
+        // On trie les mois dans chaque année par ordre décroissant
+        foreach ($grouped as &$months) {
+            krsort($months);
+        }
+
         // On trie les années par ordre décroissant
         krsort($grouped);
 

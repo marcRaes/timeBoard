@@ -52,3 +52,16 @@ Le schéma suivant illustre le modèle de données utilisé :
 
 # Accès à l'application
 <a href="http://timeboard.marcraes.fr" target="_blank" rel="noopener noreferrer">http://timeboard.marcraes.fr</a>
+
+---
+
+## Licence
+
+**TimeBoard** est un logiciel libre distribué sous les termes de la **Licence Européenne Publique v1.2 (EUPL-1.2)**.
+
+Vous pouvez l'utiliser, l'étudier, le modifier et le redistribuer librement, **à condition de conserver la même licence**.
+
+> ⚠️ **Aucune licence commerciale ne sera accordée, même sur demande.**  
+> L'utilisation de TimeBoard dans un contexte privatif (SaaS fermé, redistribution non libre, etc.) **n'est pas autorisée**.
+
+🔗 Texte complet de la licence : [EUPL v1.2 en français](https://interoperable-europe.ec.europa.eu/sites/default/files/custom-page/attachment/eupl_v1.2_fr.pdf)

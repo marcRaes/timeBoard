@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\WorkMonth;
 use App\Entity\WorkReportSubmission;
-use App\Exception\InvalidAttachmentException;
 use App\Exception\WorkReportException;
 use App\Form\WorkReportSubmissionType;
 use App\Service\WorkReportMailer;
@@ -14,9 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 #[IsGranted('ROLE_USER')]
 #[Route('/work_report')]
@@ -26,12 +22,6 @@ final class WorkReportController extends AbstractController
         private readonly WorkReportMailer $reportMailer,
     ) {}
 
-    /**
-     * @throws SyntaxError
-     * @throws \Throwable
-     * @throws RuntimeError
-     * @throws LoaderError
-     */
     #[Route('/submit/{id}', name: 'app_work_report_submit')]
     public function submit(WorkMonth $workMonth, Request $request): Response
     {

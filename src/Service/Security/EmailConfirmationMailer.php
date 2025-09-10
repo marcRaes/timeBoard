@@ -21,7 +21,7 @@ readonly class EmailConfirmationMailer
     {
         $email = (new TemplatedEmail())
             ->from(new Address('noreply@marcraes.fr', 'TimeBoard'))
-            ->to((string) $user->getEmail())
+            ->to($user->getEmail())
             ->subject('Veuillez confirmer votre email')
             ->htmlTemplate('emails/confirmation_email.html.twig');
 

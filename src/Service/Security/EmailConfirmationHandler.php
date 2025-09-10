@@ -6,19 +6,18 @@ use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 readonly class EmailConfirmationHandler
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private VerifyEmailHelperInterface $verifyEmailHelper,
+        private EmailConfirmationValidatorInterface $emailValidator,
         private Security $security,
     ) {}
 
     public function handleEmailConfirmation(Request $request, User $user): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmationFromRequest(
+        $this->emailValidator->validate(
             $request,
             (string) $user->getId(),
             $user->getEmail()
