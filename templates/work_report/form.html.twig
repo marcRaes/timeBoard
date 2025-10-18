@@ -19,37 +19,40 @@
 
             <div class="modal-body">
                 {% set monthDate = (workMonth.year ~ '-' ~ '%02d'|format(workMonth.month) ~ '-01')|date('F') %}
+
                 <p class="text-muted small">Vous êtes sur le point de soumettre la fiche du mois de <strong>{{ monthDate|trans|capitalize }} {{ workMonth.year }}</strong>. Cette action est définitive.</p>
 
                 {% include 'form/_form_errors.html.twig' with {'form': form} %}
 
+                {% set emailHasError = form.recipientEmail.vars.errors|length > 0 %}
                 <div class="mb-3">
                     {{ form_label(form.recipientEmail) }}
-                    {{ form_widget(form.recipientEmail, { 'attr': { 'class': 'form-control' } }) }}
-                    {% if form.vars.errors|length > 0 %}
+                    {{ form_widget(form.recipientEmail, {
+                        'attr': {
+                            'class': 'form-control' ~ (emailHasError ? ' is-invalid' : '')
+                        }
+                    }) }}
+                    {% if emailHasError %}
                         <div class="invalid-feedback d-block">
-                            {% for error in form.vars.errors %}
-                                {{ error.message }}
-                            {% endfor %}
+                            {{ form_errors(form.recipientEmail) }}
                         </div>
                     {% endif %}
                 </div>
 
+                {% set fileHasError = form.attachmentPath.vars.errors|length > 0 %}
                 <div class="mb-3">
-                    {{ form_label(form.attachmentPath, 'Pièce jointe (Optionnel)') }}
+                    {{ form_label(form.attachmentPath, 'Frais de transport (Optionnel)') }}
                     {{ form_widget(form.attachmentPath, {
                         'attr': {
                             'accept': '.pdf,image/*',
                             'data-max-size': 2097152,
-                            'class': 'form-control'
+                            'class': 'form-control' ~ (fileHasError ? ' is-invalid' : '')
                         }
                     }) }}
                     <small class="form-text text-muted">Taille max : 2 Mo.</small>
-                    {% if form.vars.errors|length > 0 %}
+                    {% if fileHasError %}
                         <div class="invalid-feedback d-block">
-                            {% for error in form.vars.errors %}
-                                {{ error.message }}
-                            {% endfor %}
+                            {{ form_errors(form.attachmentPath) }}
                         </div>
                     {% endif %}
                 </div>

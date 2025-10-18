@@ -1,10 +1,5 @@
 {% if not form.vars.valid %}
-    <div class="alert alert-danger alert-sm p-2 m-2 mb-0 small" role="alert" style="font-size: 0.9rem;">
-        <div class="fw-semibold mb-1"><i class="bi bi-exclamation-circle me-1"></i> Des erreurs ont été détectées</div>
-        <ul class="mb-0 ps-3">
-            {% for error in form.vars.errors %}
-                <li>{{ error.message }}</li>
-            {% endfor %}
-        </ul>
+    <div class="alert alert-danger alert-sm p-2 m-2 small" role="alert" style="font-size: 0.9rem;">
+        <div class="fw-semibold mb-1 text-center"><i class="bi bi-exclamation-circle me-1"></i> Des erreurs ont été détectées</div>
     </div>
 {% endif %}
