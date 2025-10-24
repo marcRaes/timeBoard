@@ -4,6 +4,13 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),  
 et ce projet adhère au principe de [Versionnement sémantique](https://semver.org/lang/fr/).
 
+## [v1.6.0] - 2025-10-24
+### 🧪 Ajouté
+- Intégration de Signature Pad
+- Ajout de la signature manuscrite via un canvas sur la page d'envoi de la fiche d'heure.
+
+---
+
 ## [v1.5.1] - 2025-10-25
 ### 🐞 Corrigé
 - Suppression de l’affichage redondant des erreurs du formulaire d'envoi de la fiche d'heure.
