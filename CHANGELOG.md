@@ -4,6 +4,12 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),  
 et ce projet adhère au principe de [Versionnement sémantique](https://semver.org/lang/fr/).
 
+## [v1.5.1] - 2025-10-25
+### 🐞 Corrigé
+- Suppression de l’affichage redondant des erreurs du formulaire d'envoi de la fiche d'heure.
+- Correction de l’affichage HTML des erreurs du formulaire d'envoi de la fiche d'heure.
+- Correction du mappage du champ `type` pour l'édition de la journée de travail
+
 ---
 
 ## [v1.5.0] - 2025-09-10
