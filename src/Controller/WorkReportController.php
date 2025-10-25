@@ -2,13 +2,17 @@
 
 namespace App\Controller;
 
+use App\DTO\SubmitWorkReportCommandDTO;
+use App\Entity\User;
 use App\Entity\WorkMonth;
 use App\Entity\WorkReportSubmission;
-use App\Exception\WorkReportException;
+use App\Exception\SubmissionException;
 use App\Form\WorkReportSubmissionType;
-use App\Service\WorkReportMailer;
+use App\Service\File\TemporaryFileCleaner;
+use App\Service\Submission\WorkReportSubmissionHandler;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -19,13 +23,18 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class WorkReportController extends AbstractController
 {
     public function __construct(
-        private readonly WorkReportMailer $reportMailer,
+        private readonly LoggerInterface $logger,
+        private readonly WorkReportSubmissionHandler $submissionHandler,
+        private readonly TemporaryFileCleaner $temporaryFileCleaner,
     ) {}
 
     #[Route('/submit/{id}', name: 'app_work_report_submit')]
     public function submit(WorkMonth $workMonth, Request $request): Response
     {
-        if ($workMonth->getUser() !== $this->getUser()) {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($workMonth->getUser() !== $user) {
             throw $this->createNotFoundException('Vous n\'êtes pas autorisé à effectuer cet envoi.');
         }
 
@@ -34,11 +43,15 @@ final class WorkReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $submitWorkReportCommandDTO = new SubmitWorkReportCommandDTO(
+                $workMonth,
+                $workReportSubmission,
+                $user,
+                $request->request->get('signatureData'),
+            );
+
             try {
-                $this->reportMailer->send(
-                    $workMonth,
-                    $workReportSubmission
-                );
+                $this->submissionHandler->handler($submitWorkReportCommandDTO);
 
                 $this->addFlash('success', 'Le rapport de travail a été envoyé avec succès.');
 
@@ -50,13 +63,14 @@ final class WorkReportController extends AbstractController
                 }
 
                 return $this->redirectToRoute('app_home');
-            } catch (WorkReportException $exception) {
-                $field = $exception->getField();
-                if ($field) {
-                    $form->get($field)->addError(new FormError($exception->getUserMessage()));
-                } else {
-                    $form->addError(new FormError($exception->getUserMessage()));
-                }
+            } catch (SubmissionException $exception) {
+                $this->logger->error('Erreur lors du processus de soumission : ' . $exception->getMessage(), [
+                    'submissionId' => $workReportSubmission->getId(),
+                ]);
+
+                throw $exception;
+            } finally {
+                $this->temporaryFileCleaner->clean(scandir(sys_get_temp_dir() . '/timeboard'));
             }
         }
 

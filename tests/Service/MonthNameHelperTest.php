@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service;
 
-use App\Service\MonthNameHelper;
+use App\Service\Formatter\MonthNameFormatter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +29,7 @@ class MonthNameHelperTest extends TestCase
 
         $translator->expects($this->once())->method('trans')->with($monthKey)->willReturn($expectedTranslation);
 
-        $helper = new MonthNameHelper($translator);
+        $helper = new MonthNameFormatter($translator);
 
         $this->assertSame($expectedTranslation, $helper->getLocalizedMonthName($monthNumber));
     }

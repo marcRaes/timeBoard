@@ -2,7 +2,7 @@
 
 namespace App\Controller\Security;
 
-use App\Dto\PasswordInputDto;
+use App\DTO\PasswordInputDTO;
 use App\Form\ResetPasswordType;
 use App\Repository\UserRepository;
 use App\Service\Security\ResetPasswordMailer;
@@ -55,7 +55,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_forgot_password');
         }
 
-        $dto = new PasswordInputDto();
+        $dto = new PasswordInputDTO();
         $form = $this->createForm(ResetPasswordType::class, $dto);
         $form->handleRequest($request);
 

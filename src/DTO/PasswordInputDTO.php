@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Dto;
+namespace App\DTO;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-class PasswordInputDto
+class PasswordInputDTO
 {
     #[Assert\NotBlank(message: "Veuillez entrer un mot de passe.")]
     #[Assert\Length(

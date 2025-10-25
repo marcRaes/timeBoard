@@ -42,4 +42,7 @@ return [
     'bootstrap/js/dist/collapse' => [
         'version' => '5.3.6',
     ],
+    'signature_pad' => [
+        'version' => '5.1.1',
+    ],
 ];

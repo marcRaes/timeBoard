@@ -2,27 +2,24 @@
 
 namespace App\Service\Export;
 
-use App\Config\TimeSheetConfig;
 use App\Exception\ImageNotFoundException;
 use PhpOffice\PhpSpreadsheet\Worksheet\Drawing;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 readonly class ImageInserter
 {
-    public function __construct(private TimeSheetConfig $timeSheetConfig) {}
+    public function __construct() {}
 
-    public function insert(Worksheet $sheet, string $filename, string $coordinates, int $height): void
+    public function insert(Worksheet $sheet, string $fullPath, string $coordinates, int $height): void
     {
-        $fullPath = $this->timeSheetConfig->imgPath . $filename;
-
         if (!file_exists($fullPath)) {
             throw new ImageNotFoundException($fullPath);
         }
 
         $drawing = new Drawing();
         $drawing->setWorksheet($sheet);
-        $drawing->setName(pathinfo($filename, PATHINFO_FILENAME));
-        $drawing->setDescription($filename);
+        $drawing->setName(pathinfo($fullPath, PATHINFO_FILENAME));
+        $drawing->setDescription(basename($fullPath));
         $drawing->setPath($fullPath);
         $drawing->setHeight($height);
         $drawing->setCoordinates($coordinates);

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Dto;
+namespace App\DTO;
 
-readonly class ResendEmailConfirmationResultDto
+readonly class ResendEmailConfirmationResultDTO
 {
     public function __construct(
         public string $message,

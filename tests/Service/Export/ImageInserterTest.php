@@ -37,22 +37,14 @@ BASE64;
         string $coordinates,
         int $height
     ): void {
-        $imagePath = $this->imgDir . $filename;
-        file_put_contents($imagePath, base64_decode(self::MINIMAL_PNG_BASE64));
-
-        $config = new TimeSheetConfig(
-            '/fake/template.xlsx',
-            '/tmp/pdf',
-            $this->imgDir,
-            $filename,
-            'sign.png'
-        );
+        $fullPath = $this->imgDir . $filename;
+        file_put_contents($fullPath, base64_decode(self::MINIMAL_PNG_BASE64));
 
         $spreadsheet = new Spreadsheet();
         $worksheet = $spreadsheet->getActiveSheet();
 
-        $inserter = new ImageInserter($config);
-        $inserter->insert($worksheet, $filename, $coordinates, $height);
+        $inserter = new ImageInserter();
+        $inserter->insert($worksheet, $fullPath, $coordinates, $height);
 
         $drawings = $worksheet->getDrawingCollection();
         $this->assertCount(1, $drawings);
@@ -62,7 +54,7 @@ BASE64;
         $this->assertInstanceOf(Drawing::class, $drawing);
         $this->assertSame(pathinfo($filename, PATHINFO_FILENAME), $drawing->getName());
         $this->assertSame($filename, $drawing->getDescription());
-        $this->assertSame($imagePath, $drawing->getPath());
+        $this->assertSame($fullPath, $drawing->getPath());
         $this->assertSame($coordinates, $drawing->getCoordinates());
         $this->assertSame($height, $drawing->getHeight());
         $this->assertTrue($drawing->getShadow()->getVisible());
@@ -96,20 +88,13 @@ BASE64;
 
     public function testInsertThrowsCustomExceptionIfImageIsMissing(): void
     {
-        $config = new TimeSheetConfig(
-            '/fake/template.xlsx',
-            '/tmp/pdf',
-            $this->imgDir,
-            'missing.png',
-            'sign.png'
-        );
-
+        $fullPath = $this->imgDir . 'missing.png';
         $worksheet = (new Spreadsheet())->getActiveSheet();
-        $inserter = new ImageInserter($config);
+        $inserter = new ImageInserter();
 
         $this->expectException(ImageNotFoundException::class);
         $this->expectExceptionMessage('Image file "' . $this->imgDir . 'missing.png" not found.');
 
-        $inserter->insert($worksheet, 'missing.png', 'C3', 60);
+        $inserter->insert($worksheet, $fullPath, 'C3', 60);
     }
 }

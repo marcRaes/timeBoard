@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Dto;
+namespace App\DTO;
 
 use App\Validator\UniqueUserEmail;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RegistrationDto
+class RegistrationDTO
 {
     #[Assert\NotBlank(message: "Veuillez entrer votre prénom.")]
     public string $firstName = '';
@@ -19,10 +19,10 @@ class RegistrationDto
     public string $email = '';
 
     #[Assert\Valid]
-    public PasswordInputDto $password;
+    public PasswordInputDTO $password;
 
     public function __construct()
     {
-        $this->password = new PasswordInputDto();
+        $this->password = new PasswordInputDTO();
     }
 }

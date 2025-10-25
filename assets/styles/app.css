@@ -125,6 +125,13 @@ body {
     max-width: 30%;
 }
 
+/* Bouton modal envoi fiche d'heure  */
+.btn[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transition: opacity 0.3s ease;
+}
+
 @media (max-width: 991px) {
     .illustration img {
         max-width: 400px;

@@ -3,14 +3,14 @@
 namespace App\Service\Export;
 
 use App\Entity\WorkMonth;
-use App\Service\Helper\SlugHelper;
-use App\Service\MonthNameHelper;
+use App\Service\Formatter\MonthNameFormatter;
+use App\Service\Formatter\SlugGenerator;
 
 readonly class FileNamer
 {
     public function __construct(
-        private MonthNameHelper $monthNameHelper,
-        private SlugHelper $slugHelper,
+        private MonthNameFormatter $monthNameHelper,
+        private SlugGenerator      $slugHelper,
     )
     {}
 

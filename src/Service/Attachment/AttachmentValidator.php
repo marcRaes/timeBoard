@@ -3,24 +3,45 @@
 namespace App\Service\Attachment;
 
 use App\Exception\InvalidAttachmentException;
+use App\Service\Formatter\MimeTypeExtensionMapper;
 use Symfony\Component\HttpFoundation\File\File;
 
 readonly class AttachmentValidator
 {
-    public function validate(string $path): string
+    public function __construct(
+       private MimeTypeExtensionMapper $mimeTypeExtensionMapper,
+    )
+    {}
+
+    public function validate(string $path, array $allowedExtensions, array $allowedMimeTypes): array
     {
         $file = new File($path);
-        $extension = $file->getExtension();
         $mimeType = $file->getMimeType();
+        $extension = strtolower($file->guessExtension() ?? $file->getExtension() ?? '');
 
-        if (!in_array($extension, ['pdf', 'jpg', 'png', 'gif'])) {
-            throw new InvalidAttachmentException('Extension non autorisée.');
+        if (!in_array($mimeType, $allowedMimeTypes)) {
+            throw new InvalidAttachmentException(sprintf(
+                'Type MIME "%s" invalide. Autorisés : %s',
+                $mimeType,
+                implode(', ', $allowedMimeTypes)
+            ));
         }
 
-        if (!in_array($mimeType, ['application/pdf', 'image/jpeg', 'image/png', 'image/gif'])) {
-            throw new InvalidAttachmentException('Type MIME invalide.');
+        if ($extension && !in_array($extension, $allowedExtensions, true)) {
+            throw new InvalidAttachmentException(sprintf(
+                'Extension "%s" non autorisée. Autorisées : %s',
+                $extension,
+                implode(', ', $allowedExtensions)
+            ));
         }
 
-        return $extension;
+        if (!$extension) {
+            $extension = $this->mimeTypeExtensionMapper->map($mimeType);
+        }
+
+        return [
+            'extension' => $extension,
+            'mimeType' => $mimeType,
+        ];
     }
 }

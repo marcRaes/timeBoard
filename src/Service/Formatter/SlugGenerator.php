@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Helper;
+namespace App\Service\Formatter;
 
 use Normalizer;
 
-readonly class SlugHelper
+readonly class SlugGenerator
 {
     public function slugify(string $text): string
     {

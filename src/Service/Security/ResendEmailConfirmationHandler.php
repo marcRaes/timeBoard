@@ -2,7 +2,7 @@
 
 namespace App\Service\Security;
 
-use App\Dto\ResendEmailConfirmationResultDto;
+use App\DTO\ResendEmailConfirmationResultDTO;
 use App\Repository\UserRepository;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\RateLimiter\RateLimiterFactoryInterface;
@@ -18,24 +18,24 @@ readonly class ResendEmailConfirmationHandler
     /**
      * @throws TransportExceptionInterface
      */
-    public function handle(string $email): ResendEmailConfirmationResultDto
+    public function handle(string $email): ResendEmailConfirmationResultDTO
     {
         if (!$email) {
-            return new ResendEmailConfirmationResultDto('Adresse email requise.', 'danger');
+            return new ResendEmailConfirmationResultDTO('Adresse email requise.', 'danger');
         }
 
         $limiter = $this->emailLimiter->create($email);
         if (!$limiter->consume()->isAccepted()) {
-            return new ResendEmailConfirmationResultDto('Vous avez récemment demandé un renvoi. Merci de patienter quelques minutes.', 'warning');
+            return new ResendEmailConfirmationResultDTO('Vous avez récemment demandé un renvoi. Merci de patienter quelques minutes.', 'warning');
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         if ($user && !$user->isVerified()) {
             $this->emailConfirmationMailer->send($user);
-            return new ResendEmailConfirmationResultDto('Un nouvel email de confirmation vous a été envoyé.', 'success');
+            return new ResendEmailConfirmationResultDTO('Un nouvel email de confirmation vous a été envoyé.', 'success');
         }
 
-        return new ResendEmailConfirmationResultDto('Si ce compte existe, un email de confirmation a déjà été envoyé.');
+        return new ResendEmailConfirmationResultDTO('Si ce compte existe, un email de confirmation a déjà été envoyé.');
     }
 }

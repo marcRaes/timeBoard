@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace App\Service\Formatter;
 
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class MonthNameHelper
+class MonthNameFormatter
 {
     private TranslatorInterface $translator;
 

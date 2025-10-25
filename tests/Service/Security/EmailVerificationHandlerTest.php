@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service\Security;
 
-use App\Dto\EmailVerificationResultDto;
+use App\DTO\EmailVerificationResultDTO;
 use App\Entity\User;
 use App\Service\Security\EmailConfirmationHandler;
 use App\Service\Security\EmailVerificationHandler;
@@ -87,7 +87,7 @@ class EmailVerificationHandlerTest extends TestCase
 
         $result = $this->handler->verify($this->request, $userId);
 
-        $this->assertInstanceOf(EmailVerificationResultDto::class, $result);
+        $this->assertInstanceOf(EmailVerificationResultDTO::class, $result);
         $this->assertEquals($expectedType, $result->type);
         $this->assertEquals($expectedMessage, $result->message);
     }

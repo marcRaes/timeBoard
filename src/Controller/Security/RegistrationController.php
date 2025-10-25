@@ -2,7 +2,7 @@
 
 namespace App\Controller\Security;
 
-use App\Dto\RegistrationDto;
+use App\DTO\RegistrationDTO;
 use App\Form\RegistrationForm;
 use App\Service\Security\RegistrationHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +23,7 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request): Response
     {
-        $dto = new RegistrationDto();
+        $dto = new RegistrationDTO();
         $form = $this->createForm(RegistrationForm::class, $dto);
         $form->handleRequest($request);
 

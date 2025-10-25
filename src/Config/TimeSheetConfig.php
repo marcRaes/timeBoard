@@ -9,6 +9,5 @@ readonly class TimeSheetConfig
         public string $pdfPath,
         public string $imgPath,
         public string $logoFilename,
-        public string $signatureFilename,
     ) {}
 }

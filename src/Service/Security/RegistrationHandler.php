@@ -2,7 +2,7 @@
 
 namespace App\Service\Security;
 
-use App\Dto\RegistrationDto;
+use App\DTO\RegistrationDTO;
 use App\Factory\UserFactory;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 
@@ -17,7 +17,7 @@ readonly class RegistrationHandler
     /**
      * @throws TransportExceptionInterface
      */
-    public function register(RegistrationDto $dto): void
+    public function register(RegistrationDTO $dto): void
     {
         $user = $this->userFactory->fromDto($dto);
         $this->userPersister->save($user);

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service;
 
-use App\Dto\WorkMonthSummaryDto;
+use App\DTO\WorkMonthSummaryDTO;
 use App\Entity\WorkMonth;
 use App\Service\WorkMonthGrouper;
 use PHPUnit\Framework\AssertionFailedError;
@@ -54,7 +54,7 @@ class WorkMonthGrouperTest extends TestCase
 
     public function testGroupByYearAndMonthType(): void
     {
-        $this->assertInstanceOf(WorkMonthSummaryDto::class, $this->result[2025][11]);
+        $this->assertInstanceOf(WorkMonthSummaryDTO::class, $this->result[2025][11]);
     }
 
     public static function tearDownAfterClass(): void

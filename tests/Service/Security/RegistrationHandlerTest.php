@@ -2,7 +2,7 @@
 
 namespace App\Tests\Service\Security;
 
-use App\Dto\RegistrationDto;
+use App\DTO\RegistrationDTO;
 use App\Entity\User;
 use App\Factory\UserFactory;
 use App\Service\Security\EmailConfirmationMailer;
@@ -21,7 +21,7 @@ class RegistrationHandlerTest extends TestCase
      */
     public function testRegister(): void
     {
-        $dto = $this->createMock(RegistrationDto::class);
+        $dto = $this->createMock(RegistrationDTO::class);
         $user = $this->createMock(User::class);
         $userFactory = $this->createMock(UserFactory::class);
         $entityManager = $this->createMock(EntityManagerInterface::class);

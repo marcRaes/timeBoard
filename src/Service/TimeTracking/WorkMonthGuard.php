@@ -4,11 +4,11 @@ namespace App\Service\TimeTracking;
 
 use App\Entity\WorkMonth;
 use App\Exception\WorkMonthAlreadySentException;
-use App\Service\MonthNameHelper;
+use App\Service\Formatter\MonthNameFormatter;
 
 final class WorkMonthGuard
 {
-    public function __construct(private readonly MonthNameHelper $monthNameHelper) {}
+    public function __construct(private readonly MonthNameFormatter $monthNameHelper) {}
 
     public function ensureNotSent(WorkMonth $workMonth): void
     {

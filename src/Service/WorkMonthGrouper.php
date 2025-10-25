@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Dto\WorkMonthSummaryDto;
+use App\DTO\WorkMonthSummaryDTO;
 use App\Entity\WorkMonth;
 
 /**
@@ -12,7 +12,7 @@ final class WorkMonthGrouper
 {
     /**
      * @param WorkMonth[] $workMonths
-     * @return array<int, array<int, WorkMonthSummaryDto>>
+     * @return array<int, array<int, WorkMonthSummaryDTO>>
      */
     public function groupByYearAndMonth(array $workMonths): array
     {
@@ -22,7 +22,7 @@ final class WorkMonthGrouper
             $year = $workMonth->getYear();
             $month = $workMonth->getMonth();
 
-            $grouped[$year][$month] = new WorkMonthSummaryDto(
+            $grouped[$year][$month] = new WorkMonthSummaryDTO(
                 $year,
                 $month,
                 $workMonth

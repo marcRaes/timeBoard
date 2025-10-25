@@ -2,8 +2,8 @@
 
 namespace App\Tests\Factory;
 
-use App\Dto\PasswordInputDto;
-use App\Dto\RegistrationDto;
+use App\DTO\PasswordInputDTO;
+use App\DTO\RegistrationDTO;
 use App\Entity\User;
 use App\Factory\UserFactory;
 use PHPUnit\Framework\MockObject\Exception;
@@ -17,11 +17,11 @@ class UserFactoryTest extends TestCase
      */
     public function testFromDtoCreatesUserCorrectly(): void
     {
-        $dto = new RegistrationDto();
+        $dto = new RegistrationDTO();
         $dto->firstName = 'Alice';
         $dto->lastName = 'Dupont';
         $dto->email = 'alice@example.com';
-        $dto->password = new PasswordInputDto();
+        $dto->password = new PasswordInputDTO();
         $dto->password->password = 'P@ssw0rd';
 
         $passwordHasher = $this->createMock(UserPasswordHasherInterface::class);

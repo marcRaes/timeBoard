@@ -8,7 +8,6 @@ parameters:
     pdf_path: '%kernel.project_dir%/var/export/'
     img_path: '%kernel.project_dir%/assets/images/timesheet/'
     logo_filename: 'Logo_Villefontaine2011.png'
-    signature_filename: 'Signature.png'
 
 services:
     # default configuration for services in *this* file
@@ -31,7 +30,6 @@ services:
             $pdfPath: '%pdf_path%'
             $imgPath: '%img_path%'
             $logoFilename: '%logo_filename%'
-            $signatureFilename: '%signature_filename%'
 
     App\Service\Export\TimeSheetBuilder:
         arguments:
@@ -39,6 +37,7 @@ services:
                 - '@App\Service\Export\Section\HeaderSection'
                 - '@App\Service\Export\Section\LinesSection'
                 - '@App\Service\Export\Section\FooterSection'
+                - '@App\Service\Export\Section\SignatureSection'
 
     App\Service\Security\ResendEmailConfirmationHandler:
         arguments:

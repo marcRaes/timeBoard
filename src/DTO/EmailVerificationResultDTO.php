@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Dto;
+namespace App\DTO;
 
-readonly class EmailVerificationResultDto
+readonly class EmailVerificationResultDTO
 {
     public function __construct(
         public string  $message,

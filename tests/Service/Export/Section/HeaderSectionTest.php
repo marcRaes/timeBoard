@@ -8,7 +8,7 @@ use App\Entity\WorkMonth;
 use App\Service\Export\ImageInserter;
 use App\Service\Export\Section\HeaderSection;
 use App\Service\Export\Section\SheetContext;
-use App\Service\MonthNameHelper;
+use App\Service\Formatter\MonthNameFormatter;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
@@ -21,8 +21,8 @@ class HeaderSectionTest extends TestCase
     public function testApplySetsHeaderCellsAndInsertsLogo(): void
     {
         $imageInserter = $this->createMock(ImageInserter::class);
-        $config = new TimeSheetConfig('/template.xlsx', '/pdf', '/img', 'logo.png', 'sign.png');
-        $monthNameHelper = $this->createMock(MonthNameHelper::class);
+        $config = new TimeSheetConfig('/template.xlsx', '/pdf', '/img/', 'logo.png');
+        $monthNameHelper = $this->createMock(MonthNameFormatter::class);
 
         $sheet = $this->createMock(Worksheet::class);
 
@@ -50,15 +50,30 @@ class HeaderSectionTest extends TestCase
 
         $imageInserter->expects($this->once())
             ->method('insert')
-            ->with($sheet, 'logo.png', 'A2', 70);
+            ->with(
+                $sheet,
+                '/img/logo.png',
+                'A2',
+                70
+            );
 
         $context = new SheetContext();
         $section = new HeaderSection($imageInserter, $config, $monthNameHelper);
         $section->apply($sheet, $workMonth, $context);
 
-        $this->assertContains(['E4', 'Mai', null], $calledArguments);
-        $this->assertContains(['H4', 2025, null], $calledArguments);
-        $this->assertContains(['B8', 'Skywalker', null], $calledArguments);
-        $this->assertContains(['B10', 'Luke', null], $calledArguments);
+        $this->assertTrue($this->cellWasSet($calledArguments, 'E4', 'Mai'), 'La cellule E4 doit contenir le nom du mois.');
+        $this->assertTrue($this->cellWasSet($calledArguments, 'H4', 2025), 'La cellule H4 doit contenir l’année.');
+        $this->assertTrue($this->cellWasSet($calledArguments, 'B8', 'Skywalker'), 'La cellule B8 doit contenir le nom de famille.');
+        $this->assertTrue($this->cellWasSet($calledArguments, 'B10', 'Luke'), 'La cellule B10 doit contenir le prénom.');
+    }
+
+    private function cellWasSet(array $calledArguments, string $cell, mixed $expectedValue): bool
+    {
+        foreach ($calledArguments as $call) {
+            if ($call[0] === $cell && $call[1] === $expectedValue) {
+                return true;
+            }
+        }
+        return false;
     }
 }

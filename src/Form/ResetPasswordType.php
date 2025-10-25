@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Dto\PasswordInputDto;
+use App\DTO\PasswordInputDTO;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,7 +22,7 @@ class ResetPasswordType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => PasswordInputDto::class,
+            'data_class' => PasswordInputDTO::class,
         ]);
     }
 }

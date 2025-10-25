@@ -2,7 +2,7 @@
 
 namespace App\Factory;
 
-use App\Dto\RegistrationDto;
+use App\DTO\RegistrationDTO;
 use App\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -12,7 +12,7 @@ readonly class UserFactory
         private UserPasswordHasherInterface $hasher
     ) {}
 
-    public function fromDto(RegistrationDto $dto): User
+    public function fromDto(RegistrationDTO $dto): User
     {
         $user = new User();
         $user->setFirstName($dto->firstName);
