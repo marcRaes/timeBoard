@@ -4,6 +4,11 @@ Toutes les modifications notables de ce projet sont documentées dans ce fichier
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.1.0/),  
 et ce projet adhère au principe de [Versionnement sémantique](https://semver.org/lang/fr/).
 
+## [v1.7.0] - 2025-11-10
+### 🧪 Ajouté
+- Blocage de la page d’inscription publique et obligation du token d’invitation
+- Passage sous licence PolyForm-Noncommercial-1.0.0
+
 ## [v1.6.0] - 2025-10-24
 ### 🧪 Ajouté
 - Intégration de Signature Pad

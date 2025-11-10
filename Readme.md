@@ -1,6 +1,7 @@
-# Time Board
+# TimeBoard
+[![License: PolyForm Noncommercial 1.0.0](https://img.shields.io/badge/license-PolyForm%20Noncommercial%201.0.0-blue.svg)](https://polyformproject.org/licenses/noncommercial/1.0.0/)
 
-**Time Board** est une application web de gestion des feuilles de temps développée en Symfony 7.2.  
+**TimeBoard** est une application web de gestion des feuilles de temps développée en Symfony 7.3.  
 Elle simplifie la saisie, la génération et la transmission des fiches d’heures mensuelles.
 
 ---
@@ -12,7 +13,6 @@ Elle simplifie la saisie, la génération et la transmission des fiches d’heur
 - Calcul automatique des heures totales mensuelles
 - Génération de rapports au format Excel et PDF à partir de templates
 - Transmission des fiches par email
-- Gestion des versions (limitation du nombre de modifications)
 - Interface responsive optimisée (Bootstrap 5, Stimulus, Turbo)
 
 ---
@@ -57,11 +57,26 @@ Le schéma suivant illustre le modèle de données utilisé :
 
 ## Licence
 
-**TimeBoard** est un logiciel libre distribué sous les termes de la **Licence Européenne Publique v1.2 (EUPL-1.2)**.
+**TimeBoard** est distribué sous la **[PolyForm Noncommercial License 1.0.0](https://polyformproject.org/wp-content/uploads/2020/05/PolyForm-Noncommercial-1.0.0.txt)**.  
+© 2025 Marc Raes – All rights reserved.
 
-Vous pouvez l'utiliser, l'étudier, le modifier et le redistribuer librement, **à condition de conserver la même licence**.
+Cette licence autorise :
+- l’utilisation du logiciel à des fins **personnelles, éducatives, académiques ou de recherche** ;
+- la consultation et l’étude du code source.
 
-> ⚠️ **Aucune licence commerciale ne sera accordée, même sur demande.**  
-> L'utilisation de TimeBoard dans un contexte privatif (SaaS fermé, redistribution non libre, etc.) **n'est pas autorisée**.
+Elle interdit :
+- tout usage **commercial, professionnel ou institutionnel** ;
+- toute prestation ou service impliquant une **rémunération directe ou indirecte**.
 
-🔗 Texte complet de la licence : [EUPL v1.2 en français](https://interoperable-europe.ec.europa.eu/sites/default/files/custom-page/attachment/eupl_v1.2_fr.pdf)
+Le logiciel est fourni “tel quel”, sans garantie.  
+Toute violation des termes met fin immédiatement au droit d’utilisation.
+
+> Les **collectivités, entreprises ou associations** souhaitant un usage professionnel  
+> peuvent contacter l’auteur pour obtenir une **licence commerciale dédiée**
+
+---
+
+## Informations SPDX
+
+- **License ID :** `PolyForm-Noncommercial-1.0.0`
+- **SPDX URL :** [https://spdx.org/licenses/PolyForm-Noncommercial-1.0.0.html](https://spdx.org/licenses/PolyForm-Noncommercial-1.0.0.html)
