@@ -51,7 +51,7 @@ Le schéma suivant illustre le modèle de données utilisé :
 ---
 
 # Accès à l'application
-<a href="http://timeboard.marcraes.fr" target="_blank" rel="noopener noreferrer">http://timeboard.marcraes.fr</a>
+<a href="https://timeboard-demo.marcraes.fr" target="_blank" rel="noopener noreferrer">https://timeboard-demo.marcraes.fr</a>
 
 ---
 
