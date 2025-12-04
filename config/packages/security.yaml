@@ -9,6 +9,14 @@ security:
                 class: App\Entity\User
                 property: email
     firewalls:
+        demo:
+            pattern: ^/
+            host: timeboard-demo.marcraes.fr
+            lazy: true
+            custom_authenticators:
+                - App\Security\DemoAuthenticator
+            security: true
+
         main:
             custom_authenticators:
                 - App\Security\LoginAuthenticator
