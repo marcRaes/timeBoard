@@ -11,3 +11,13 @@ services:
     App\Service\Submission\WorkReportSubmissionHandler:
         bind:
             $modeDemo: true
+
+    App\EventListener\DemoLogoutListener:
+        arguments:
+            $modeDemo: true
+        tags:
+            - {
+                name: kernel.event_listener,
+                event: Symfony\Component\Security\Http\Event\LogoutEvent,
+                method: onLogout
+            }

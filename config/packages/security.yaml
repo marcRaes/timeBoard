@@ -16,6 +16,8 @@ security:
             custom_authenticators:
                 - App\Security\DemoAuthenticator
             security: true
+            logout:
+                path: app_logout
 
         main:
             custom_authenticators:
