@@ -8,6 +8,7 @@ parameters:
     pdf_path: '%kernel.project_dir%/var/export/'
     img_path: '%kernel.project_dir%/assets/images/timesheet/'
     logo_filename: 'Logo_Villefontaine2011.png'
+    modeDemo: false
 
 services:
     # default configuration for services in *this* file
@@ -42,6 +43,14 @@ services:
     App\Service\Security\ResendEmailConfirmationHandler:
         arguments:
             $emailLimiter: '@limiter.email_confirmation_resend'
+
+    App\Service\Submission\WorkReportSubmissionHandler:
+        arguments:
+            $modeDemo: false
+
+when@demo:
+    imports:
+        - { resource: services_demo.yaml }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

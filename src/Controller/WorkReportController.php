@@ -53,7 +53,11 @@ final class WorkReportController extends AbstractController
             try {
                 $this->submissionHandler->handler($submitWorkReportCommandDTO);
 
-                $this->addFlash('success', 'Le rapport de travail a été envoyé avec succès.');
+                if ($this->getParameter('modeDemo')) {
+                    $this->addFlash('success', 'Le rapport de travail a été traité et enregistré. (Mode démo : l\'envoi d\'email est désactivé.)');
+                } else {
+                    $this->addFlash('success', 'Le rapport de travail a été envoyé avec succès.');
+                }
 
                 if ($request->isXmlHttpRequest() || $request->headers->get('Turbo-Frame')) {
                     return new Response('<turbo-stream action="replace" target="work-report-form-frame"><template>

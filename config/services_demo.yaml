@@ -1,0 +1,13 @@
+parameters:
+    img_path: '%kernel.project_dir%/assets/images/'
+    logo_filename: 'logo-timeboard.png'
+    modeDemo: true
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    App\Service\Submission\WorkReportSubmissionHandler:
+        bind:
+            $modeDemo: true

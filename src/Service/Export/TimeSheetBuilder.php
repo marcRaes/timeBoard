@@ -18,7 +18,7 @@ readonly class TimeSheetBuilder
         private iterable $sections,
         private TimeSheetConfig $timeSheetConfig,
         private SheetContext $sheetContext,
-        private TimeSheetConfigurator $timeSheetConfigurator
+        private TimeSheetConfigurator $timeSheetConfigurator,
     ) {}
 
     public function build(WorkMonth $workMonth): Spreadsheet

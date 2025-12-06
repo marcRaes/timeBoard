@@ -17,11 +17,12 @@ use App\Service\Mailer\WorkReportMailer;
 readonly class WorkReportSubmissionHandler
 {
     public function __construct(
+        private bool $modeDemo,
         private SheetContext $sheetContext,
         private TimeSheetExporter $exporter,
         private WorkReportSubmissionManagerInterface $workReportSubmissionManager,
         private WorkReportMailer $workReportMailer,
-        private SignatureProcessor $signatureProcessor,
+        private SignatureProcessor $signatureProcessor
     )
     {}
 
@@ -62,7 +63,9 @@ readonly class WorkReportSubmissionHandler
         );
 
         try {
-            $this->workReportMailer->send($mailSendContextDTO);
+            if (!$this->modeDemo) {
+                $this->workReportMailer->send($mailSendContextDTO);
+            }
 
             $this->workReportSubmissionManager->markAsSent($workReportSubmission);
         } catch (SubmissionException $exception) {
